@@ -1,17 +1,21 @@
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useShareStore = defineStore('share', () => {
-  const userInfo = reactive({
-    name: 'Lenovo',
-    age: 25,
-    gender: 'Male',
-    email: 'lenovo@163.com',
-    phone: '13800138000',
-    address: 'Beijing, China'
-  })
+  const theme = ref(localStorage.getItem('theme') || 'light')
 
-  return { 
-    userInfo
-   }
+  const getTheme = () => {
+    return theme.value
+  }
+
+  const setTheme = (newTheme) => {
+    theme.value = newTheme
+    localStorage.setItem('theme', newTheme)
+  }
+
+  return {
+    theme,
+    getTheme,
+    setTheme
+  }
 })

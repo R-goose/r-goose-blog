@@ -44,6 +44,19 @@ $fontColors: (
     font-size: #{$i * 1}px;
   }
 }
+// 字体粗细
+.fw-bold {
+  font-weight: bold;
+}
+.fw-normal {
+  font-weight: normal;
+}
+// 行高
+@for $i from 1 through 30 {
+  .lh#{$i} {
+    line-height: #{$i * 1}px;
+  }
+}
 // 宽度vw
 @for $i from 1 through 100 {
   .w#{$i} {
@@ -57,13 +70,13 @@ $fontColors: (
   }
 }
 // 圆角
-@for $i from 1 through 20 {
+@for $i from 1 through 40 {
   .r#{$i} {
     border-radius: #{$i * 1}px;
   }
-  .br-circle {
-    border-radius: 50%;
-  }
+}
+.br-circle {
+  border-radius: 50%;
 }
 // 背景颜色
 @each $name, $color in $bgColors {
@@ -101,6 +114,12 @@ $fontColors: (
     margin-bottom: #{$i * 1}vh;
   }
 }
+// 间隔vw
+@for $i from 1 through 100 {
+  .gap#{$i}vw {
+    gap: #{$i * 1}vw;
+  }
+}
 
 // flex布局
 .flex {
@@ -126,6 +145,12 @@ $fontColors: (
 .pos-f {
   position: fixed;
 }
+.left {
+  left: 0px;
+}
+.right {
+  right: 0px;
+}
 // 文本位置
 .text-center {
   text-align: center;
@@ -135,4 +160,7 @@ $fontColors: (
 }
 .text-right {
   text-align: right;
+}
+.cursor-move {
+  cursor: move;
 }

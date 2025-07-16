@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
+// const router = useRouter()
 
 const navList = ref([
   {
@@ -21,7 +21,7 @@ const navList = ref([
 ])
 </script>
 <template>
-  <div class="fs25">
+  <div class="fs25 bg-color text-color">
     <header>
       <nav class="w100 text-center flex flex-row">
         <div v-for="(item, index) in navList" :key="index">{{ item.title }}</div>
