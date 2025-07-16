@@ -1,0 +1,138 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+$colors: (
+  'white': #fff,
+  'black': #4c4c4c,
+  'gray': #9c9c9c,
+  'green': #3ea732,
+  'blue': #63a6c9,
+  'red': #e64141,
+  'orange': #f6ae30,
+  'success': #67c23a,
+  'warning': #e6a23c,
+  'danger': #f56c6c,
+  'info': #909399,
+);
+$bgColors: (
+  'white': #fff,
+  'black': #000,
+  'gray': #ddd,
+  'efeff1': #efeff1,
+  'blue': #598bad,
+  'inner': #f4f7f9,
+  'green': #70b603,
+);
+$fontColors: (
+  'white': #fff,
+  'black': #000,
+  'gray': #9c9c9c,
+  'green': #3ea732,
+  'blue': #63a6c9,
+  'red': #e64141,
+  'orange': #f6ae30,
+  'success': #67c23a,
+  'warning': #e6a23c,
+  'danger': #f56c6c,
+  'info': #909399,
+);
+// 字体大小px
+@for $i from 1 through 30 {
+  .fs#{$i} {
+    font-size: #{$i * 1}px;
+  }
+}
+// 宽度vw
+@for $i from 1 through 100 {
+  .w#{$i} {
+    width: #{$i * 1}vw;
+  }
+}
+// 高度vh
+@for $i from 1 through 100 {
+  .h#{$i} {
+    height: #{$i * 1}vh;
+  }
+}
+// 圆角
+@for $i from 1 through 20 {
+  .r#{$i} {
+    border-radius: #{$i * 1}px;
+  }
+  .br-circle {
+    border-radius: 50%;
+  }
+}
+// 背景颜色
+@each $name, $color in $bgColors {
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}
+// 字体颜色
+@each $name, $color in $fontColors {
+  .text-#{$name} {
+    color: $color;
+  }
+}
+// 左外边距vw
+@for $i from 1 through 100 {
+  .ml#{$i} {
+    margin-left: #{$i * 1}vw;
+  }
+}
+// 右外边距vw
+@for $i from 1 through 100 {
+  .mr#{$i} {
+    margin-right: #{$i * 1}vw;
+  }
+}
+// 上外边距vh
+@for $i from 1 through 100 {
+  .mt#{$i} {
+    margin-top: #{$i * 1}vh;
+  }
+}
+// 下外边距vh
+@for $i from 1 through 100 {
+  .mb#{$i} {
+    margin-bottom: #{$i * 1}vh;
+  }
+}
+
+// flex布局
+.flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+// 定位
+.pos-r {
+  position: relative;
+}
+.pos-a {
+  position: absolute;
+}
+.pos-f {
+  position: fixed;
+}
+// 文本位置
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
