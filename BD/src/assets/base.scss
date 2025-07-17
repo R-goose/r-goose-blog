@@ -108,10 +108,22 @@ $fontColors: (
     margin-left: #{$i * 1}vw;
   }
 }
+// 左外边距px
+@for $i from 1 through 100 {
+  .ml#{$i}px {
+    margin-left: #{$i * 1}px;
+  }
+}
 // 右外边距vw
 @for $i from 1 through 100 {
   .mr#{$i} {
     margin-right: #{$i * 1}vw;
+  }
+}
+// 右外边距px
+@for $i from 1 through 100 {
+  .mr#{$i}px {
+    margin-right: #{$i * 1}px;
   }
 }
 // 上外边距vh
@@ -130,6 +142,18 @@ $fontColors: (
 @for $i from 1 through 100 {
   .gap#{$i}vw {
     gap: #{$i * 1}vw;
+  }
+}
+// left
+@for $i from -100 through 100 {
+  .left#{$i}vw {
+    left: #{$i * 1}vw;
+  }
+}
+//right px
+@for $i from 0 through 200 {
+  .right#{$i}px {
+    right: #{$i * 1}px;
   }
 }
 
@@ -175,4 +199,10 @@ $fontColors: (
 }
 .cursor-move {
   cursor: move;
+}
+.cursor-p {
+  cursor: pointer;
+}
+.hidden {
+  overflow: hidden;
 }

@@ -1,3 +1,4 @@
+// dark-theme
 .dark-theme {
   $bg-color: #2b2b2b;
   $text-color: #fefefe;
@@ -28,7 +29,7 @@
       box-shadow 0.5s ease;
   }
 }
-
+// light-theme
 .light-theme {
   $bg-color: #fefefe;
   $text-color: #2b2b2b;
@@ -57,5 +58,54 @@
     transition:
       background-color 0.5s ease,
       box-shadow 0.5s ease;
+  }
+  .index-nav {
+    background-color: $bg-color;
+    color: $text-color;
+    border-bottom: #d7d7d7 1px solid;
+    box-shadow: #d7d7d7 0px 0px 3px 0px;
+    gap: 1vw;
+    transition: all 0.5s ease;
+    // right: 62px !important;
+    position: absolute;
+    .nav-item {
+      width: auto;
+      position: relative;
+      line-height: 7vh;
+      left: 35vw;
+    }
+    .avatar {
+      box-shadow: #b3b3b3 0px 0px 3px 0px;
+      right: 62px;
+      position: absolute;
+    }
+  }
+  .avatar-toast {
+    position: absolute;
+    top: 7.1vh;
+    right: 10px;
+  }
+  .index-nav-item {
+    position: relative;
+    user-select: none;
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+    &:hover {
+      width: 90%;
+      left: 5%;
+      border-radius: 8px;
+      background-color: #e0fcb7;
+      color: $link-color;
+    }
+
+    &:active {
+      background-color: #ededed;
+      color: $text-color;
+      scale: 0.9;
+      transition: all 0.1s ease;
+    }
   }
 }

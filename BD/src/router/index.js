@@ -12,11 +12,27 @@ const router = createRouter({
         {
           name:'blog',
           path:'blog',
-          component:()=>import('@/views/blogView/blogPage.vue')
+          component:()=>import('@/views/blogView/index/blogPage.vue')
+        },
+        {
+          name:'social',
+          path:'social',
+          component:()=>import('@/views/blogView/index/socialPage.vue')
+        },
+        {
+          name:'personal',
+          path:'personal',
+          component:()=>import('@/views/blogView/index/personalPage.vue')
         }
       ]
+    },
+    {
+      name:'login',
+      path:'/login',
+      component:()=>import('@/views/blogView/login/loginPage.vue')
+
     }
-    
+
   ],
 })
 

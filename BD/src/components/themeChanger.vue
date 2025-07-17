@@ -21,7 +21,7 @@ const changeTheme = () => {
 
 const isDragging = ref(false)
 const x = ref(1830)
-const y = ref(50)
+const y = ref(100)
 const offsetX = ref(0)
 const offsetY = ref(0)
 // 获取视口尺寸
@@ -68,7 +68,7 @@ const stopDrag = () => {
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)
-  x.value = viewportWidth.value - 200
+  x.value = viewportWidth.value - 120
   if (theme.value === 'dark') {
     document.documentElement.classList.add('dark-theme')
     document.documentElement.classList.remove('light-theme')
@@ -83,7 +83,7 @@ onUnmounted(() => {
 
 watch(viewportWidth, (newVal, oldVal) => {
   viewportWidth.value = window.innerWidth
-  x.value = viewportWidth.value - 200
+  x.value = viewportWidth.value - 120
   if (newVal !== oldVal) {
     viewportWidth.value = window.innerWidth
   }
@@ -117,6 +117,7 @@ watch(viewportWidth, (newVal, oldVal) => {
   height: 28px;
   width: 80px;
   user-select: none;
+  z-index: 1;
 
   &:hover {
     cursor: move;
