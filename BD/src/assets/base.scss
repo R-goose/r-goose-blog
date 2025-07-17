@@ -69,6 +69,18 @@ $fontColors: (
     height: #{$i * 1}vh;
   }
 }
+// 宽度px
+@for $i from 1 through 200 {
+  .w#{$i}px {
+    width: #{$i * 1}px;
+  }
+}
+// 高度px
+@for $i from 1 through 200 {
+  .h#{$i}px {
+    height: #{$i * 1}px;
+  }
+}
 // 圆角
 @for $i from 1 through 40 {
   .r#{$i} {
