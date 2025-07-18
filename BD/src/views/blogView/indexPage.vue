@@ -51,9 +51,9 @@ const logout = () => {
 }
 </script>
 <template>
-  <div class="fs25 bg-color text-color hidden">
+  <div class="fs25 bg-color text-color hidden flex">
     <header>
-      <nav class="w100 h7 text-center flex flex-row index-nav flex-center">
+      <nav class="w100 h7 text-center flex flex-row index-nav flex-center pos-a">
         <div
           class="cursor-p fs30 h7 nav-item"
           v-for="(item, index) in navList"
@@ -87,7 +87,9 @@ const logout = () => {
         </div>
       </div>
     </header>
-    <RouterView />
+    <div class="pos-a mt7">
+      <RouterView />
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
