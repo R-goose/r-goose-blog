@@ -1,23 +1,27 @@
 const mainRouter = [
   {
     path: '/',
-    name: 'index',
-    component: () => import('@/views/blogView/indexPage.vue'),
+    redirect: '/RGoose',
+  },
+  {
+    path: '/RGoose',
+    name: 'RGoose',
+    component: () => import('@/views/blogView/blog/firstView.vue'),
     children: [
       {
-        name: 'blog',
-        path: 'blog',
-        component: () => import('@/views/blogView/index/blogPage.vue'),
+        name: '/',
+        path: '/',
+        component: () => import('@/views/blogView/blog/mainPage.vue'),
       },
       {
         name: 'social',
         path: 'social',
-        component: () => import('@/views/blogView/index/socialPage.vue'),
+        component: () => import('@/views/blogView/blog/socialPage.vue'),
       },
       {
         name: 'personal',
         path: 'personal',
-        component: () => import('@/views/blogView/index/personalPage.vue'),
+        component: () => import('@/views/blogView/blog/personalPage.vue'),
       },
     ],
   },

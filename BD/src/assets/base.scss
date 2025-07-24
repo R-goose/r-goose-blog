@@ -38,10 +38,13 @@ $fontColors: (
   'danger': #f56c6c,
   'info': #909399,
 );
-// 字体大小px
+// 字体大小
 @for $i from 1 through 30 {
   .fs#{$i} {
     font-size: #{$i * 1}px;
+  }
+  .fs#{$i}rem {
+    font-size: #{$i * 1}rem;
   }
 }
 // 字体粗细
@@ -70,13 +73,19 @@ $fontColors: (
   }
 }
 // 宽度px
-@for $i from 1 through 200 {
+@for $i from 1 through 2000 {
   .w#{$i}px {
     width: #{$i * 1}px;
   }
 }
+.full-w{
+  width: 100%;
+}
+.full-h{
+  height: 100%;
+}
 // 高度px
-@for $i from 1 through 200 {
+@for $i from 1 through 2000 {
   .h#{$i}px {
     height: #{$i * 1}px;
   }
@@ -169,6 +178,12 @@ $fontColors: (
 }
 .flex-center {
   justify-content: center;
+  align-items: center;
+}
+.flex-jc{
+  justify-content: center;
+}
+.flex-ac {
   align-items: center;
 }
 .flex1 {
