@@ -49,6 +49,7 @@ onMounted(() => {
   -ms-overflow-style: none;
   /* IE and Edge */
   scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
     display: none;

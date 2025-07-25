@@ -1,5 +1,7 @@
 <script setup>
+import { onMounted } from 'vue'
 import mainPage from './mainPage.vue'
+import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 const handleCilck = (name) => {
   const a = document.createElement('a')
   switch (name) {
@@ -28,13 +30,18 @@ const handleCilck = (name) => {
   a.target = '_blank'
   a.click()
 }
+
+onMounted(() => {
+  // window.addEventListener('scroll', handleScroll)
+})
 </script>
+
 <template>
   <div class="pos-a full-w first flex flex-ac flex-row">
-    <img src="@/image/pictures/喝水.png" alt="" class="br-circle w500px h500px ml10" draggable="false" />
+    <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
     <div class="ml2">
-      <h1 class="fs7rem name">R-Goose<span>🦖</span></h1>
-      <div class="app-icon flex flex-row mt3" draggable="false">
+      <h1 class="fs7rem name ml6">R-Goose<span>🦖</span></h1>
+      <div class="app-icon flex flex-row mt3 ml6" draggable="false">
         <div class="flex flex-column">
           <img src="@/image/pictures/github.png" alt="" draggable="false" title="我的GitHub"
             @click="handleCilck('GitHub')" />
@@ -73,14 +80,24 @@ const handleCilck = (name) => {
       <div class="green"></div>
       <div class="yellow"></div>
       <div class="blue"></div>
-      <div class="purple"></div>
+      <InteractiveDecorations></InteractiveDecorations>
+      <div class="pos-a flex flex-center full-w full-h mt46 flex-column">
+        <h2 class="fs1rem">往下看</h2>
+        <a class="fs2rem down" href="#top">☝🏻</a>
+      </div>
     </div>
   </div>
   <div class="pos-a mt100 full-w">
+    <a href="" id="top"></a>
     <mainPage></mainPage>
   </div>
 </template>
 <style scoped lang="scss">
+.mainImg {
+  z-index: 5;
+  box-shadow: #ebebeb 0px 0px 40px 10px;
+}
+
 .first {
   height: 100vh;
 }
@@ -127,77 +144,82 @@ const handleCilck = (name) => {
     background-image: none;
     color: navajowhite;
     text-shadow: #008b74 0px 5px 10px;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
 .next-step {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 
   .red {
     position: absolute;
-    bottom: 60vh;
-    right: 20vw;
-    width: 280px;
-    height: 280px;
+    top: 18%;
+    left: 24%;
+    width: 14vw;
+    height: 14vw;
     border-radius: 50%;
-    background-color: #f42e2e;
-    box-shadow: #f42e2e 0px 0px 100px 80px;
-    filter: blur(10px);
-    z-index: 1;
+    background-color: rgba(244, 46, 46, 0.7);
+    filter: blur(60px);
+    z-index: 2;
   }
 
   .green {
     position: absolute;
-    bottom: 10vh;
-    right: 50vw;
-    width: 400px;
-    height: 400px;
+    top: 50%;
+    left: 6%;
+    width: 18vw;
+    height: 18vw;
     border-radius: 50%;
-    background-color: #3dff64;
-    box-shadow: #3dff64 0px 0px 100px 80px;
-    filter: blur(10px);
-    z-index: 1;
-  }
-
-  .purple {
-    position: absolute;
-    bottom: 10vh;
-    right: 50vw;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background-color: #b53dff;
-    box-shadow: #b53dff 0px 0px 100px 80px;
-    filter: blur(10px);
-    z-index: 1;
+    background-color: rgba(61, 255, 100, 0.6);
+    filter: blur(60px);
+    z-index: 2;
   }
 
   .blue {
     position: absolute;
-    bottom: 10vh;
-    right: 50vw;
-    width: 400px;
-    height: 400px;
+    top: 12%;
+    left: 5%;
+    width: 20vw;
+    height: 20vw;
     border-radius: 50%;
-    background-color: #3daeff;
-    box-shadow: #3daeff 0px 0px 100px 80px;
-    filter: blur(10px);
-    z-index: 1;
+    background-color: rgba(61, 174, 255, 0.6);
+    filter: blur(60px);
+    z-index: 2;
   }
 
   .yellow {
     position: absolute;
-    bottom: 30vh;
-    right: 30vw;
-    width: 280px;
-    height: 280px;
+    top: 50%;
+    left: 20%;
+    width: 13vw;
+    height: 13vw;
     border-radius: 50%;
-    background-color: #ffef3d;
-    box-shadow: #ffef3d 0px 0px 100px 80px;
-    filter: blur(1s0px);
-    z-index: 1;
+    background-color: rgba(255, 239, 61, 0.7);
+    filter: blur(60px);
+    z-index: 2;
+  }
+}
+
+.down {
+  rotate: 180deg;
+  text-shadow: #ffd7c2 0px 0px 10px;
+  animation: float 1s linear infinite;
+  text-decoration: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
   }
 
+  50% {
+    transform: translate(0, -5px);
+  }
 
+  100% {
+    transform: translate(0, 0);
+  }
 }
 </style>
