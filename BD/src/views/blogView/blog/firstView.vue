@@ -169,7 +169,7 @@ onUnmounted(() => {
   animation: nameAnimate 5s linear infinite;
 
   span {
-    position: relative;
+    position: absolute;
     bottom: 1.5vh;
     z-index: 3;
     transition: all 0.3s ease-in-out;
