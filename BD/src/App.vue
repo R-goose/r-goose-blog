@@ -50,6 +50,7 @@ onMounted(() => {
   /* IE and Edge */
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  transform: translateZ(0);
 
   &::-webkit-scrollbar {
     display: none;

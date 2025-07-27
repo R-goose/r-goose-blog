@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import mainPage from './mainPage.vue'
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 const handleCilck = (name) => {
@@ -31,8 +31,36 @@ const handleCilck = (name) => {
   a.click()
 }
 
+const pageHeight = ref(0)
+const viewportHeight = ref(0)
+const mainPageRef = ref(null)
+
 onMounted(() => {
-  // window.addEventListener('scroll', handleScroll)
+  const mainPageEl = mainPageRef.value.$el
+  // 子组件高度（根据需求选择属性）
+  const mainPageHeight = {
+    offset: mainPageEl.offsetHeight, // 包含padding、边框
+    scroll: mainPageEl.scrollHeight, // 包含滚动内容
+    client: mainPageEl.clientHeight  // 仅包含可见区域（不含滚动条）
+  }
+  console.log('mainPage子组件高度：', mainPageHeight)
+  // 获取整个页面的高度
+  pageHeight.value = Math.max(
+    document.body.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.clientHeight,
+    document.documentElement.scrollHeight,
+    document.documentElement.offsetHeight
+  )
+
+  // 获取视口高度
+  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight
+
+  console.log(`页面高度: ${pageHeight.value + mainPageHeight.offset}px`);
+  console.log(`视口高度: ${viewportHeight.value}px`);
+})
+
+onUnmounted(() => {
 })
 </script>
 
@@ -89,7 +117,7 @@ onMounted(() => {
   </div>
   <div class="pos-a mt100 full-w">
     <a href="" id="top"></a>
-    <mainPage></mainPage>
+    <mainPage ref="mainPageRef"></mainPage>
   </div>
 </template>
 <style scoped lang="scss">
@@ -130,21 +158,37 @@ onMounted(() => {
 
 .name {
   position: relative;
-  background-image: linear-gradient(to left top, #3dff64 30%, #71b8ff 60%, #8d3cff);
+  background: linear-gradient(to left top, #3dff64 30%, #71b8ff 60%, #8d3cff);
   background-clip: text;
+  background-size: 200% auto;
   color: transparent;
   text-shadow:
     0px 2px 10px rgba(86, 171, 255, 0.5),
     0px 5px 15px rgba(141, 60, 255, 0.327);
   z-index: 9999;
+  animation: nameAnimate 5s linear infinite;
 
   span {
     position: relative;
     bottom: 1.5vh;
-    background-image: none;
-    color: navajowhite;
-    text-shadow: #008b74 0px 5px 10px;
     z-index: 3;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      color: rgb(150, 105, 38);
+      text-shadow: #008b74 0px 5px 10px;
+      font-size: 8rem !important;
+    }
+  }
+}
+
+@keyframes nameAnimate {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: 0% center;
   }
 }
 

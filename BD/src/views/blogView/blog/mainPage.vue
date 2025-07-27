@@ -1,21 +1,23 @@
 <script setup>
-// import { ref } from 'vue'
-// import { RouterView } from 'vue-router'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-
-
-
+onMounted(() => {
+  window.location.reload
+})
 </script>
+
 <template>
-  <div class="h100 text-center">
-    <!-- <div class="pos-a mt7">
-      <RouterView />
-    </div> -->
-    <div>
-      <h1>76786</h1>
-    </div>
-    <h1>76786</h1>
-    123
+  <div class="main text-center">
+    <h1>Welcome to my blog</h1>
+    <header></header>
   </div>
 </template>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.main {
+  height: 100vh;
+}
+
+h1 {
+  position: sticky;
+}
+</style>

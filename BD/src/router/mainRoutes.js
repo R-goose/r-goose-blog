@@ -1,3 +1,5 @@
+import RGoose from '@/views/blogView/blog/firstView.vue'
+import mainPage from '@/views/blogView/blog/mainPage.vue'
 const mainRouter = [
   {
     path: '/',
@@ -6,24 +8,12 @@ const mainRouter = [
   {
     path: '/RGoose',
     name: 'RGoose',
-    component: () => import('@/views/blogView/blog/firstView.vue'),
-    children: [
-      {
-        name: '/',
-        path: '/',
-        component: () => import('@/views/blogView/blog/mainPage.vue'),
-      },
-      {
-        name: 'social',
-        path: 'social',
-        component: () => import('@/views/blogView/blog/socialPage.vue'),
-      },
-      {
-        name: 'personal',
-        path: 'personal',
-        component: () => import('@/views/blogView/blog/personalPage.vue'),
-      },
-    ],
+    component: RGoose,
+  },
+  {
+    name: 'mainPage',
+    path: '/mainPage',
+    component: mainPage,
   },
   {
     name: 'login',
