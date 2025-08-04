@@ -19,7 +19,7 @@
     width: 50px;
     height: 50px;
     // background-color: #1e1e1e;
-    // box-shadow: inset #fefefe 0px 0px 3px 0px;
+    box-shadow: inset #fefefe 5px 0px 10px 0px;
     z-index: 9999;
     border-radius: 50%;
   }
@@ -44,8 +44,10 @@
     position: sticky;
     width: 50px;
     height: 50px;
-    // background-color: #fefefe;
-    // box-shadow: inset #a5a5a5 0px 0px 3px 0px;
+    // background-clip: text;
+    // color: transparent;
+    // background-image: linear-gradient(to bottom right, #ff702e, #ff8a00);
+    box-shadow: #ffe0bd 5px 3px 10px 0px;
     z-index: 9999;
     border-radius: 50%;
   }

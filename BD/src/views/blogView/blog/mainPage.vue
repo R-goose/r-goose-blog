@@ -25,11 +25,14 @@ onMounted(() => {
     <aside class="right"></aside>
     <footer>
       <div>
-        <span>© 2025 R-Goose</span>
-        <span>All rights reserved.</span>
-        <span>Powered by Vue.js</span>
-        <span>Designed by R-Goose</span>
-        <span>Hosted by Github</span>
+        <div class="flex flex-colums flex-center mt25">
+          <div>© 2025 R-Goose</div>
+          <div class="space"></div>
+          <div>设计师：R-Goose</div>
+          <div class="space"></div>
+          <div>创建：vue3.x</div>
+        </div>
+        <div>所有内容均为原创，转载请注明出处</div>
       </div>
       <div></div>
     </footer>
@@ -73,6 +76,10 @@ onMounted(() => {
     width: 100%;
     height: 30vh;
     background-color: #2c2c2c;
+
+    .space {
+      width: 3vw;
+    }
   }
 }
 
