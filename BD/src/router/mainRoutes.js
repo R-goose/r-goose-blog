@@ -1,25 +1,19 @@
+import RGoose from '@/views/blogView/blog/firstView.vue'
+import mainPage from '@/views/blogView/blog/mainPage.vue'
 const mainRouter = [
   {
     path: '/',
-    name: 'index',
-    component: () => import('@/views/blogView/indexPage.vue'),
-    children: [
-      {
-        name: 'blog',
-        path: 'blog',
-        component: () => import('@/views/blogView/index/blogPage.vue'),
-      },
-      {
-        name: 'social',
-        path: 'social',
-        component: () => import('@/views/blogView/index/socialPage.vue'),
-      },
-      {
-        name: 'personal',
-        path: 'personal',
-        component: () => import('@/views/blogView/index/personalPage.vue'),
-      },
-    ],
+    redirect: '/RGoose',
+  },
+  {
+    path: '/RGoose',
+    name: 'RGoose',
+    component: RGoose,
+  },
+  {
+    name: 'mainPage',
+    path: '/mainPage',
+    component: mainPage,
   },
   {
     name: 'login',

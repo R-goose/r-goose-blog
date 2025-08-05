@@ -15,27 +15,13 @@
     color: $text-color;
   }
   .theme-bg-color {
-    background-color: #1e1e1e;
-    box-shadow: inset #fefefe 0px 0px 3px 0px;
-  }
-  .theme-circle-color {
-    cursor: pointer;
-    background-color: #1e1e1e;
-    box-shadow: #fefefe 0px 0px 3px 0px;
-    width: 25px;
-    height: 25px;
-    transition:
-      background-color 0.5s ease,
-      box-shadow 0.5s ease;
-  }
-  .logo-picture {
-    position: absolute;
-    right: 0;
-    height: 90vh;
-    aspect-ratio: 1/1;
-    margin: 0 auto;
-    // box-shadow: #1e1e1e 0px 0px 100px 100px;
-    // border: #1e1e1e 1px solid;
+    position: sticky;
+    width: 50px;
+    height: 50px;
+    // background-color: #1e1e1e;
+    box-shadow: inset #fefefe 5px 0px 10px 0px;
+    z-index: 9999;
+    border-radius: 50%;
   }
 }
 // light-theme
@@ -55,75 +41,14 @@
     color: $text-color;
   }
   .theme-bg-color {
-    background-color: #fefefe;
-    box-shadow: inset #1e1e1e 0px 0px 3px 0px;
-  }
-  .theme-circle-color {
-    cursor: pointer;
-    background-color: #fefefe;
-    box-shadow: #1e1e1e 0px 0px 3px 0px;
-    width: 25px;
-    height: 25px;
-    transition:
-      background-color 0.5s ease,
-      box-shadow 0.5s ease;
-  }
-  .index-nav {
-    background-color: $bg-color;
-    color: $text-color;
-    border-bottom: #d7d7d7 1px solid;
-    box-shadow: #d7d7d7 0px 0px 3px 0px;
-    gap: 1vw;
-    transition: all 0.5s ease;
-    // right: 62px !important;
-    position: absolute;
-    .nav-item {
-      width: auto;
-      position: relative;
-      line-height: 7vh;
-      left: 35vw;
-    }
-    .avatar {
-      box-shadow: #b3b3b3 0px 0px 3px 0px;
-      right: 62px;
-      position: absolute;
-    }
-  }
-  .avatar-toast {
-    position: absolute;
-    top: 7.1vh;
-    right: 10px;
-  }
-  .index-nav-item {
-    position: relative;
-    user-select: none;
-    transition: background-color 0.5s ease;
-    cursor: pointer;
-    margin-bottom: 10px;
-    margin-top: 10px;
-
-    &:hover {
-      width: 90%;
-      left: 5%;
-      border-radius: 8px;
-      background-color: #e0fcb7;
-      color: $link-color;
-    }
-
-    &:active {
-      background-color: #ededed;
-      color: $text-color;
-      scale: 0.9;
-      transition: all 0.1s ease;
-    }
-  }
-  .logo-picture {
-    position: absolute;
-    right: 0;
-    height: 90vh;
-    aspect-ratio: 1/1;
-    margin: 0 auto;
-    // box-shadow: #1e1e1e 0px 0px 100px 100px;
-    // border: #1e1e1e 1px solid;
+    position: sticky;
+    width: 50px;
+    height: 50px;
+    // background-clip: text;
+    // color: transparent;
+    // background-image: linear-gradient(to bottom right, #ff702e, #ff8a00);
+    box-shadow: #ffe0bd 5px 3px 10px 0px;
+    z-index: 9999;
+    border-radius: 50%;
   }
 }
