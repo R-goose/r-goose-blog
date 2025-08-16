@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
-import mainPage from './mainPage.vue'
+import mainPage from './pageContainer.vue'
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 const handleCilck = (name) => {
   const a = document.createElement('a')

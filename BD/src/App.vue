@@ -44,16 +44,41 @@ onMounted(() => {
   height: 100vh;
   overflow: auto;
   user-select: none;
-  scrollbar-width: none;
+  // scrollbar-width: none;
   /* Firefox */
   -ms-overflow-style: none;
   /* IE and Edge */
   scroll-snap-type: y mandatory;
+  overflow-x: hidden;
   scroll-behavior: smooth;
   transform: translateZ(0);
 
+
   &::-webkit-scrollbar {
-    display: none;
+    width: 0.5vw;
+    background-color: #eeeeee;
+
+    &-thumb {
+      background: linear-gradient(180deg,
+          rgb(255, 212, 212),
+          rgb(255, 255, 178),
+          rgb(205, 255, 205),
+          rgb(198, 253, 253),
+          rgb(239, 206, 255));
+      border-radius: 10px;
+
+      &:active {
+        background: linear-gradient(180deg,
+            rgb(255, 212, 212),
+            rgb(255, 255, 178),
+            rgb(205, 255, 205),
+            rgb(198, 253, 253),
+            rgb(239, 206, 255));
+        box-shadow: inset 0 0 6px rgb(104, 104, 104);
+      }
+    }
+
+    // display: none;
   }
 }
 </style>

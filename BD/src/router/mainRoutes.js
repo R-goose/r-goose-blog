@@ -1,20 +1,23 @@
 import RGoose from '@/views/blogView/blog/firstView.vue'
-import mainPage from '@/views/blogView/blog/mainPage.vue'
+import HomePage from '@/views/blogView/blog/homePage.vue'
+import index from '@/views/blogView/blog/pageContainer.vue'
+import myBlog from '@/views/blogView/blog/myBlog.vue'
 const mainRouter = [
   {
     path: '/',
-    redirect: '/RGoose',
+    redirect: '/RGoose/index',
   },
   {
-    path: '/RGoose',
+    path: '/RGoose/index',
     name: 'RGoose',
     component: RGoose,
   },
   {
-    name: 'mainPage',
-    path: '/mainPage',
-    component: mainPage,
+    name: 'index',
+    path: '/RGoose/index',
+    component: index,
   },
+
   {
     name: 'login',
     path: '/login',

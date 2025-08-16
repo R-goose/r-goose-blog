@@ -1,5 +1,7 @@
 <script setup></script>
 <template>
-  <div></div>
+  <div>
+    <h1>OA系统首页</h1>
+  </div>
 </template>
 <style scoped lang="scss"></style>
