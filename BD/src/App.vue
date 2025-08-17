@@ -1,25 +1,36 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 import { RouterView } from 'vue-router'
 import themeChanger from '@/components/themeChanger.vue'
 
 const mainRef = ref(null);
 
+// 处理滚轮事件（整屏滚动）
+const handleWheel = (e) => {
+  e.preventDefault();
+  const delta = Math.sign(e.deltaY); // 1=向下，-1=向上
+  const scrollStep = window.innerHeight; // 每次滚动一个视口高度
+  const currentScroll = mainRef.value.scrollTop;
+  // 对齐到最近的整屏位置
+  const targetScroll = Math.round(currentScroll / scrollStep) * scrollStep + delta * scrollStep;
+
+  mainRef.value.scrollTo({
+    top: targetScroll,
+    behavior: 'smooth'
+  });
+};
+
 onMounted(() => {
   const container = mainRef.value;
   if (container) {
-    container.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const delta = Math.sign(e.deltaY);// 获取滚动方向（1=向下，-1=向上）
-      const scrollStep = window.innerHeight; // 每次滚动一个视口高度
-      const currentScroll = container.scrollTop;
-      const targetScroll = Math.round(currentScroll / scrollStep) * scrollStep + delta * scrollStep;// 对齐到最近的整屏位置
+    container.addEventListener('wheel', handleWheel);
+  }
+});
 
-      container.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth'
-      });
-    });
+onUnmounted(() => {
+  const container = mainRef.value;
+  if (container) {
+    container.removeEventListener('wheel', handleWheel);
   }
 });
 </script>
@@ -40,23 +51,22 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .main {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   overflow: auto;
   user-select: none;
-  // scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
   scroll-snap-type: y mandatory;
   overflow-x: hidden;
   scroll-behavior: smooth;
   transform: translateZ(0);
+  font-family: "钉钉进步体 Regular";
+  font-variation-settings: normal;
 
-
+  // 默认隐藏滚动条
   &::-webkit-scrollbar {
     width: 0.5vw;
-    background-color: #eeeeee;
+    background-color: transparent;
 
     &-thumb {
       background: linear-gradient(180deg,
@@ -68,17 +78,19 @@ onMounted(() => {
       border-radius: 10px;
 
       &:active {
-        background: linear-gradient(180deg,
-            rgb(255, 212, 212),
-            rgb(255, 255, 178),
-            rgb(205, 255, 205),
-            rgb(198, 253, 253),
-            rgb(239, 206, 255));
         box-shadow: inset 0 0 6px rgb(104, 104, 104);
       }
     }
+  }
 
-    // display: none;
+  // 字体定义
+  @font-face {
+    font-family: "钉钉进步体 Regular";
+    font-weight: 400;
+    src: url("/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff2") format("woff2"),
+      url("/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff") format("woff");
+    font-variation-settings: normal;
+    font-display: swap;
   }
 }
 </style>
