@@ -37,30 +37,40 @@ const viewportHeight = ref(0)
 const mainPageRef = ref(null)
 const pageTotalHeight = ref(0)
 
-onMounted(() => {
-  const mainPageEl = mainPageRef.value.$el
+const updateHeights = () => {
+  const mainPageEl = mainPageRef.value?.$el;
+  if (!mainPageEl) return;
+
   // 子组件高度
   const mainPageHeight = {
-    offset: mainPageEl.offsetHeight, // 包含padding、边框
-    scroll: mainPageEl.scrollHeight, // 包含滚动内容
-    client: mainPageEl.clientHeight  // 仅包含可见区域（不含滚动条）
-  }
-  console.log('mainPage子组件高度：', mainPageHeight)
-  // 获取整个页面的高度
+    offset: mainPageEl.offsetHeight,
+    scroll: mainPageEl.scrollHeight,
+    client: mainPageEl.clientHeight
+  };
+
+  // 整个页面的高度
   pageHeight.value = Math.max(
     document.body.scrollHeight,
     document.body.offsetHeight,
     document.documentElement.clientHeight,
     document.documentElement.scrollHeight,
     document.documentElement.offsetHeight
-  )
+  );
 
-  // 获取视口高度
-  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight
-  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset
+  // 视口高度
+  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
+  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
+  console.log('pageTotalHeight：', pageTotalHeight.value);
+
+}
+
+onMounted(() => {
+  updateHeights()
+  window.addEventListener('resize', updateHeights);
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', updateHeights);
 })
 </script>
 
@@ -118,7 +128,7 @@ onUnmounted(() => {
   <div class="pos-a mt100 full-w">
     <a href="" id="top"></a>
     <mainPage ref="mainPageRef"></mainPage>
-    <!-- <scrollBar :pageTotalHeight="pageTotalHeight" :currentPageHeight="viewportHeight"></scrollBar> -->
+    <scrollBar :pageTotalHeight="pageTotalHeight" :currentPageHeight="viewportHeight"></scrollBar>
   </div>
 </template>
 <style scoped lang="scss">

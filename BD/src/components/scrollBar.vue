@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 const props = defineProps({
   pageTotalHeight: {
     type: Number,
@@ -18,7 +18,6 @@ const scrollBarHeight = ref(0)
 onMounted(async () => {
   await nextTick()
   scrollBarHeight.value = props.pageTotalHeight
-  console.log(scrollBarHeight.value, props.pageTotalHeight);
 
   if (scrollBarRef.value) {
     scrollBarRef.value.style.height = `${scrollBarHeight.value}px`
@@ -30,6 +29,20 @@ onMounted(async () => {
   // });
 
 })
+
+watch(
+  () => props.pageTotalHeight,
+  () => {
+    scrollBarHeight.value = props.pageTotalHeight
+    console.log(scrollBarHeight.value, props.pageTotalHeight);
+
+    if (scrollBarRef.value) {
+      scrollBarRef.value.style.height = `${scrollBarHeight.value}px`
+      thumbRef.value.style.height = `${props.currentPageHeight * props.currentPageHeight / props.pageTotalHeight}px`
+
+    }
+  }
+);
 </script>
 <template>
   <div ref="scrollBarRef" class="scroll-bar">
@@ -42,7 +55,7 @@ onMounted(async () => {
   width: 0.5vw;
   right: 0;
   top: 0;
-  background-color: #ffc0c0;
+  // background-color: #ffc0c0;
   z-index: 5000;
 
   .thumb {

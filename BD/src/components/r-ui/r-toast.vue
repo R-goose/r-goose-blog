@@ -18,7 +18,7 @@ onMounted(async () => {
   <div class="r-toast" v-if="showToastFlag">
     <div class="toast-content">
       <h1>{{ toastText }}</h1>
-      <img src="/src/image/pictures/TOF.png" alt="">
+      <!-- <img src="/src/image/pictures/TOF.png" alt=""> -->
     </div>
 
     <button @click="closeToast()">关闭</button>
@@ -28,11 +28,11 @@ onMounted(async () => {
 .r-toast {
   position: sticky;
   background-color: #f8c3c354;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
+  top: 20vh;
+  left: 25vw;
+  width: 50vw;
+  height: 50vh;
+  z-index: 5999;
 
   .toast-content {
     img {

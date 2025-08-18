@@ -76,6 +76,8 @@ const navList = reactive([
     }
   },
 ])
+
+const guideRef = ref(null)
 // 页面切换
 const changePage = (curremPageIndex) => {
   navList.forEach((item, index) => {
@@ -95,6 +97,16 @@ const closeButton = (e) => {
   e.preventDefault();
   showToastFlag.value = true
   toastText.value = '是否要关闭该按钮？'
+  // guideRef.value.style.cursor = 'not-allowed'
+  console.log('guideRef.value', guideRef.value);
+  guideRef.value.forEach(el => {
+    if (el) { // 确保元素存在
+      el.style.cursor = 'default';
+      // 也可以设置其他样式
+      el.hover = 'default'
+    }
+  });
+
   disableScroll()
 }
 // 退出登录
@@ -111,7 +123,7 @@ onMounted(() => {
   <div class="main text-center" ref="aTop">
     <header class="flex flex-center flex-row gap3vw">
       <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
-        :class="{ active: item.isActive, show: !item.meta.public }">{{ item.name }}</span>
+        :class="{ active: item.isActive, show: !item.meta.public }" ref="guideRef">{{ item.name }}</span>
       <div class="other">
         <div>
           <img src="@/image/icons/avatar.png" alt="" class="icon" draggable="false">
@@ -127,10 +139,10 @@ onMounted(() => {
     <main class="mainContent">
       <component :is="navList[curremComponentIndex].component"></component>
     </main>
-    <aside class="left" v-if="curremComponentIndex === 0">
+    <aside class="left">
       <div>去到底部</div>
     </aside>
-    <aside class="right" @click="toTop()" @contextmenu="closeButton($event)">
+    <aside class=" right" @click="toTop()" @contextmenu="closeButton($event)">
       <img src="/src/image/icons/toTop.png" alt="" draggable="false">
     </aside>
     <footer>
