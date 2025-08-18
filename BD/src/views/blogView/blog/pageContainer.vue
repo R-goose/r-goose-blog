@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, reactive, defineEmits } from 'vue'
+import { ref, onMounted, onUnmounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import HomePage from '@/views/blogView/blog/homePage.vue'
 import myBlog from '@/views/blogView/blog/myBlog.vue'
@@ -25,7 +25,9 @@ const aTop = ref(null)
 const disableScroll = () => {
   const mainEl = document.querySelector('.main')
   if (mainEl) {
-    // mainEl.style.overflowY = 'hidden'
+    mainEl.style.overflowY = 'hidden'
+    mainEl.style.position = 'fixed'
+    mainEl.style.top = `-${window.scrollY}px`
   }
 }
 
@@ -33,7 +35,7 @@ const disableScroll = () => {
 const enableScroll = () => {
   const mainEl = document.querySelector('.main')
   if (mainEl) {
-    // mainEl.style.overflowY = 'scroll'
+    mainEl.style.overflowY = 'scroll'
   }
 }
 
@@ -145,7 +147,7 @@ onMounted(() => {
       </div>
       <div></div>
     </footer>
-    <rToast :showToastFlag="showToastFlag" :toastText="toastText" @click="handleToastClose()" ref="toastRf">回到顶部
+    <rToast :showToastFlag="showToastFlag" :toastText="toastText" @closeToast="handleToastClose()" ref="toastRf">回到顶部
     </rToast>
   </div>
 </template>

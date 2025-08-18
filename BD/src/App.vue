@@ -63,10 +63,10 @@ onUnmounted(() => {
   font-family: "钉钉进步体 Regular";
   font-variation-settings: normal;
 
-  // 默认隐藏滚动条
   &::-webkit-scrollbar {
     width: 0.5vw;
     background-color: transparent;
+    // display: none;
 
     &-thumb {
       background: linear-gradient(180deg,

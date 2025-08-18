@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import mainPage from './pageContainer.vue'
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
+import scrollBar from '@/components/scrollBar.vue';
 const handleCilck = (name) => {
   const a = document.createElement('a')
   switch (name) {
@@ -34,10 +35,11 @@ const handleCilck = (name) => {
 const pageHeight = ref(0)
 const viewportHeight = ref(0)
 const mainPageRef = ref(null)
+const pageTotalHeight = ref(0)
 
 onMounted(() => {
   const mainPageEl = mainPageRef.value.$el
-  // 子组件高度（根据需求选择属性）
+  // 子组件高度
   const mainPageHeight = {
     offset: mainPageEl.offsetHeight, // 包含padding、边框
     scroll: mainPageEl.scrollHeight, // 包含滚动内容
@@ -55,9 +57,7 @@ onMounted(() => {
 
   // 获取视口高度
   viewportHeight.value = window.innerHeight || document.documentElement.clientHeight
-
-  console.log(`页面高度: ${pageHeight.value + mainPageHeight.offset}px`);
-  console.log(`视口高度: ${viewportHeight.value}px`);
+  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset
 })
 
 onUnmounted(() => {
@@ -118,6 +118,7 @@ onUnmounted(() => {
   <div class="pos-a mt100 full-w">
     <a href="" id="top"></a>
     <mainPage ref="mainPageRef"></mainPage>
+    <!-- <scrollBar :pageTotalHeight="pageTotalHeight" :currentPageHeight="viewportHeight"></scrollBar> -->
   </div>
 </template>
 <style scoped lang="scss">

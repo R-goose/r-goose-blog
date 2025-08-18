@@ -1,32 +1,43 @@
 <script setup>
-import { ref, onMounted, defineProps } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 const props = defineProps(['showToastFlag', 'toastText'])
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['closeToast'])
 
-const close = () => {
-  emit('close')
+const closeToast = () => {
+  emit('closeToast')
 }
+
+onMounted(async () => {
+  await nextTick()
+  document.documentElement.style.overflow = 'hidden'
+})
 
 </script>
 <template>
   <div class="r-toast" v-if="showToastFlag">
-    <div>
+    <div class="toast-content">
       <h1>{{ toastText }}</h1>
       <img src="/src/image/pictures/TOF.png" alt="">
     </div>
 
-    <button @click="close">关闭</button>
+    <button @click="closeToast()">关闭</button>
   </div>
 </template>
 <style scoped lang="scss">
 .r-toast {
   position: sticky;
-  // background-color: #db9a9a54;
+  background-color: #f8c3c354;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 9999;
+
+  .toast-content {
+    img {
+      width: 50vw;
+    }
+  }
 }
 </style>
