@@ -66,7 +66,7 @@ onUnmounted(() => {
   &::-webkit-scrollbar {
     width: 0.5vw;
     background-color: transparent;
-    display: none;
+    // display: none;
 
     &-thumb {
       background: linear-gradient(180deg,

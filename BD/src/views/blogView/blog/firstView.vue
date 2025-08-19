@@ -1,8 +1,14 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
-import mainPage from './pageContainer.vue'
+import { ref, onMounted, onUnmounted, reactive, markRaw } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
-import scrollBar from '@/components/scrollBar.vue';
+
+const router = useRouter();
+const route = useRoute();
+const pageHeight = ref(0)
+const viewportHeight = ref(0)
+const mainPageRef = ref(null)
+const pageTotalHeight = ref(0)
 const handleCilck = (name) => {
   const a = document.createElement('a')
   switch (name) {
@@ -32,11 +38,6 @@ const handleCilck = (name) => {
   a.click()
 }
 
-const pageHeight = ref(0)
-const viewportHeight = ref(0)
-const mainPageRef = ref(null)
-const pageTotalHeight = ref(0)
-
 const updateHeights = () => {
   const mainPageEl = mainPageRef.value?.$el;
   if (!mainPageEl) return;
@@ -61,7 +62,6 @@ const updateHeights = () => {
   viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
   pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
   console.log('pageTotalHeight：', pageTotalHeight.value);
-
 }
 
 onMounted(() => {
@@ -75,9 +75,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="tabbar">
-    123
-  </div>
   <div class="pos-a full-w first flex flex-ac flex-row">
     <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
     <div class="ml2">
@@ -128,17 +125,8 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
-  <div class="pos-a mt100 full-w">
-    <a href="" id="top"></a>
-    <mainPage ref="mainPageRef"></mainPage>
-    <scrollBar :pageTotalHeight="pageTotalHeight" :currentPageHeight="viewportHeight"></scrollBar>
-  </div>
 </template>
 <style scoped lang="scss">
-.tabbar {
-  position: fixed;
-}
-
 .mainImg {
   z-index: 5;
   box-shadow: #ebebeb 0px 0px 40px 10px;

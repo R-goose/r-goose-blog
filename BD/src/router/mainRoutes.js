@@ -1,7 +1,5 @@
-import RGoose from '@/views/blogView/blog/firstView.vue'
-import HomePage from '@/views/blogView/blog/homePage.vue'
-import index from '@/views/blogView/blog/pageContainer.vue'
-import myBlog from '@/views/blogView/blog/myBlog.vue'
+import index from '@/views/index.vue'
+
 const mainRouter = [
   {
     path: '/',
@@ -10,14 +8,8 @@ const mainRouter = [
   {
     path: '/RGoose/index',
     name: 'RGoose',
-    component: RGoose,
-  },
-  {
-    name: 'index',
-    path: '/RGoose/index',
     component: index,
   },
-
   {
     name: 'login',
     path: '/login',
