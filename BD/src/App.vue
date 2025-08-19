@@ -37,10 +37,10 @@ onUnmounted(() => {
 
 <template>
   <div ref="mainRef" class="main pos-a bg-color text-color">
-    <div class="pos-a full-w">
+    <div class="full-w">
       <RouterView />
     </div>
-    <themeChanger></themeChanger>
+    <!-- <themeChanger></themeChanger> -->
   </div>
 </template>
 
@@ -50,6 +50,11 @@ onUnmounted(() => {
 </style>
 
 <style scoped lang="scss">
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .main {
   width: 100vw;
   height: 100vh;

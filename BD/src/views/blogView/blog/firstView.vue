@@ -133,7 +133,9 @@ onUnmounted(() => {
 }
 
 .first {
-  height: 100vh;
+  height: 200vh;
+  position: relative;
+  overflow: hidden;
 }
 
 .app-icon {
@@ -202,6 +204,8 @@ onUnmounted(() => {
   position: absolute;
   width: 100%;
   height: 100%;
+  top: 0;
+  left: 0;
 
   .red {
     position: absolute;
