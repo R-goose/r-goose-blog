@@ -75,6 +75,9 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <div class="tabbar">
+    123
+  </div>
   <div class="pos-a full-w first flex flex-ac flex-row">
     <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
     <div class="ml2">
@@ -132,6 +135,10 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped lang="scss">
+.tabbar {
+  position: fixed;
+}
+
 .mainImg {
   z-index: 5;
   box-shadow: #ebebeb 0px 0px 40px 10px;

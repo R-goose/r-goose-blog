@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, markRaw } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import HomePage from '@/views/blogView/blog/homePage.vue'
 import myBlog from '@/views/blogView/blog/myBlog.vue'
@@ -46,7 +46,7 @@ const navList = reactive([
     name: '首页',
     isActive: true,
     routeName: 'RGoose',
-    component: HomePage,
+    component: markRaw(HomePage),
     meta: {
       public: true,
     }
@@ -54,7 +54,7 @@ const navList = reactive([
     name: '我的博客',
     isActive: false,
     routeName: 'myBlog',
-    component: myBlog,
+    component: markRaw(myBlog),
     meta: {
       public: true,
     }
@@ -62,7 +62,7 @@ const navList = reactive([
     name: '数据后台',
     isActive: false,
     routeName: 'DataAdmin',
-    component: dataView,
+    component: markRaw(dataView),
     meta: {
       public: true,
     }
@@ -70,7 +70,7 @@ const navList = reactive([
     name: '数据大屏',
     isActive: false,
     routeName: 'DataScreen',
-    component: dataScreen,
+    component: markRaw(dataScreen),
     meta: {
       public: true,
     }
@@ -121,7 +121,7 @@ onMounted(() => {
 
 <template>
   <div class="main text-center" ref="aTop">
-    <header class="flex flex-center flex-row gap3vw">
+    <header class="flex flex-row gap1vw">
       <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
         :class="{ active: item.isActive, show: !item.meta.public }" ref="guideRef">{{ item.name }}</span>
       <div class="other">
@@ -177,18 +177,21 @@ onMounted(() => {
   header {
     position: sticky;
     top: 0;
+    margin-left: 2vw;
+    justify-content: left;
+    align-items: center;
     width: 100%;
     height: 6vh;
-    background: linear-gradient(90deg,
-        rgba(255, 254, 254, 0.8),
-        rgba(253, 253, 248, 0.8),
-        rgba(250, 255, 250, 0.8),
-        rgba(248, 255, 255, 0.8),
-        rgba(253, 250, 255, 0.8));
+    // background: linear-gradient(90deg,
+    //     rgba(255, 254, 254, 0.8),
+    //     rgba(253, 253, 248, 0.8),
+    //     rgba(250, 255, 250, 0.8),
+    //     rgba(248, 255, 255, 0.8),
+    //     rgba(253, 250, 255, 0.8));
     font-size: 1.3rem;
     color: #9e9e9e;
     font-weight: 300;
-    border-bottom: #e2ffb59d 1px solid;
+    // border-bottom: #e2ffb59d 1px solid;
     z-index: 99;
     // text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 5px #fff;
 

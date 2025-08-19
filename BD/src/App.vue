@@ -7,7 +7,7 @@ const mainRef = ref(null);
 
 // 处理滚轮事件（整屏滚动）
 const handleWheel = (e) => {
-  e.preventDefault();
+  // e.preventDefault();
   const delta = Math.sign(e.deltaY); // 1=向下，-1=向上
   const scrollStep = window.innerHeight; // 每次滚动一个视口高度
   const currentScroll = mainRef.value.scrollTop;
@@ -23,14 +23,14 @@ const handleWheel = (e) => {
 onMounted(() => {
   const container = mainRef.value;
   if (container) {
-    container.addEventListener('wheel', handleWheel);
+    container.addEventListener('wheel', handleWheel, { passive: true });
   }
 });
 
 onUnmounted(() => {
   const container = mainRef.value;
   if (container) {
-    container.removeEventListener('wheel', handleWheel);
+    container.removeEventListener('wheel', handleWheel, { passive: true });
   }
 });
 </script>
