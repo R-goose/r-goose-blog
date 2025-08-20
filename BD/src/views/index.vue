@@ -44,6 +44,7 @@ const updateHeights = () => {
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights);
+  curremComponentIndex.value = 0
 })
 
 onUnmounted(() => {
@@ -87,7 +88,7 @@ const navList = reactive([
   {
     name: '首页',
     isActive: true,
-    routeName: 'RGoose',
+    routeName: 'firstView',
     component: markRaw(firstView),
     meta: {
       public: true,
@@ -126,6 +127,7 @@ const changePage = (curremPageIndex) => {
     item.isActive = index === curremPageIndex;
   })
   curremComponentIndex.value = curremPageIndex;
+  router.push({ name: navList[curremPageIndex].routeName })
   aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' });
 }
 
@@ -173,12 +175,13 @@ const logout = () => {
         R-Goose's Blog
       </div>
     </header>
-    <main class="mainContent">
-      <component :is="navList[curremComponentIndex].component"></component>
+    <main>
+      <!-- <component :is="navList[curremComponentIndex].component"></component> -->
+      <router-view></router-view>
     </main>
-    <aside class="left">
+    <!-- <aside class="left">
       <div>去到底部</div>
-    </aside>
+    </aside> -->
     <aside class=" right" @click="toTop()" @contextmenu="closeButton($event)">
       <img src="/src/image/icons/toTop.png" alt="" draggable="false">
     </aside>
@@ -192,7 +195,7 @@ const logout = () => {
           <div class="text">创建：vue3.x</div>
         </div>
         <div>最近更新时间：2022-03-15</div>
-        <div>所有内容均为原创，转载请注明出处2</div>
+        <div>所有内容均为原创，转载请注明出处</div>
       </div>
     </footer>
     <rToast :showToastFlag="showToastFlag" :toastText="toastText" @closeToast="handleToastClose()" ref="toastRf">回到顶部
@@ -202,7 +205,7 @@ const logout = () => {
 <style scoped lang="scss">
 .main {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(45deg,
       rgba(255, 240, 240, 0.6),
       rgba(255, 255, 220, 0.6),
@@ -210,6 +213,7 @@ const logout = () => {
       rgba(240, 255, 255, 0.6),
       rgba(250, 240, 255, 0.6));
   overflow: visible;
+  position: relative;
 
   header {
     position: sticky;
@@ -222,7 +226,7 @@ const logout = () => {
     color: #9e9e9e;
     font-weight: 300;
     // border-bottom: #e2ffb59d 1px solid;
-    z-index: 6000;
+    z-index: 8888;
 
     span {
       position: relative;
@@ -230,6 +234,7 @@ const logout = () => {
       cursor: pointer;
       padding: 0.5vh 0.8vw;
       transition: all 0.3s ease;
+      z-index: 8889;
 
       &:hover {
         border-color: #d5fffb;
@@ -261,7 +266,8 @@ const logout = () => {
 
     .title {
       position: absolute;
-      left: 1vw;
+      text-align: center;
+      width: 100vw;
       background: linear-gradient(to right, #89bb39, #7da2d1);
       background-clip: text;
       color: transparent;
@@ -313,7 +319,8 @@ const logout = () => {
   }
 
   main {
-    position: absolute;
+    position: relative;
+    // position: absolute;
     width: 100%;
     // top: 100vh;
   }
@@ -354,7 +361,7 @@ const logout = () => {
   }
 
   footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
     height: 12vh;

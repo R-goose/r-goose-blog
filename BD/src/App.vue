@@ -50,14 +50,17 @@ onUnmounted(() => {
 </style>
 
 <style scoped lang="scss">
-* {
-  padding: 0;
+html,
+body {
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 .main {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   overflow: auto;
   user-select: none;
   -ms-overflow-style: none;
