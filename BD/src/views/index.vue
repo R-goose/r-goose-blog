@@ -192,7 +192,7 @@ const logout = () => {
           <div class="text">创建：vue3.x</div>
         </div>
         <div>最近更新时间：2022-03-15</div>
-        <div>所有内容均为原创，转载请注明出处</div>
+        <div>所有内容均为原创，转载请注明出处2</div>
       </div>
     </footer>
     <rToast :showToastFlag="showToastFlag" :toastText="toastText" @closeToast="handleToastClose()" ref="toastRf">回到顶部
