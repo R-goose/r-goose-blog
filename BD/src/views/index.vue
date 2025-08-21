@@ -43,16 +43,6 @@ const updateHeights = () => {
   console.log('pageTotalHeight：', pageTotalHeight.value);
 }
 
-onMounted(() => {
-  updateHeights()
-  window.addEventListener('resize', updateHeights);
-  curremComponentIndex.value = 0
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateHeights);
-})
-
 // toast相关
 const toastRf = ref(null)
 const showToastFlag = ref(false)
@@ -158,6 +148,16 @@ const closeButton = (e) => {
 const logout = () => {
   router.push({ name: 'login' })
 }
+onMounted(() => {
+  updateHeights()
+  window.addEventListener('resize', updateHeights);
+  curremComponentIndex.value = 0
+  router.push({ name: navList[curremComponentIndex.value].routeName })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateHeights);
+})
 
 </script>
 
@@ -217,8 +217,8 @@ const logout = () => {
       rgba(240, 255, 240, 0.6),
       rgba(240, 255, 255, 0.6),
       rgba(250, 240, 255, 0.6));
-  // overflow: visible;
-  position: absolute;
+  overflow: visible;
+  // position: static;
 
   header {
     position: sticky;
