@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, reactive, markRaw } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, markRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 
@@ -64,84 +64,182 @@ const updateHeights = () => {
   console.log('pageTotalHeight：', pageTotalHeight.value);
 }
 
-onMounted(() => {
+const pageRef = reactive({
+  pageTwo: {
+    title: '总览',
+    pageHeightFromTop: 0,
+  },
+  pageThree: {
+    title: '个人介绍',
+    pageHeightFromTop: 0,
+  },
+  pageFour: {
+    title: '社交圈',
+    pageHeightFromTop: 0,
+  },
+  pageFive: {
+    title: '技能',
+    pageHeightFromTop: 0,
+  },
+  pageSix: {
+    title: '游戏',
+    pageHeightFromTop: 0,
+  },
+})
+
+// 副标题打字动画
+const title2 = ref('欢迎来到烧鹅工作室,这里是R-Goose的个人博客')
+const title2Array = ref([])
+const title2ArrayCopy = ref('')
+const title2ArrayIndex = ref(0)
+const isInputFinish = ref(false)
+const showCursor = ref(true)
+let reInputArrayInterval
+let reInputArrayTimeout
+
+const title2Animate = () => {
+  isInputFinish.value = false
+  title2ArrayCopy.value = ''
+  title2ArrayIndex.value = 0
+  title2Array.value = title2.value.split('')
+  if (isInputFinish.value === false) {
+    reInputArrayInterval = setInterval(() => {
+      if (title2ArrayIndex.value < title2Array.value.length) {
+        title2ArrayCopy.value += title2Array.value[title2ArrayIndex.value]
+        title2ArrayIndex.value++
+      } else {
+        isInputFinish.value = true
+        clearInterval(reInputArrayInterval)
+      }
+    }, 150)
+  }
+}
+
+watch(isInputFinish, (newVal) => {
+  if (newVal) {
+    reInputArrayTimeout = setTimeout(() => {
+      title2Animate()
+    }, 5100)
+  }
+})
+onMounted(async () => {
   updateHeights()
   window.addEventListener('resize', updateHeights);
+  title2Animate()
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateHeights);
+  clearTimeout(reInputArrayTimeout)
+
 })
 </script>
 
 <template>
-  <div class="pos-a full-w first flex flex-ac flex-row">
-    <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
-    <div class="ml2">
-      <h1 class="fs7rem name ml6">R-Goose<span>🦖</span></h1>
-      <div class="app-icon flex flex-row mt3 ml6" draggable="false">
-        <div class="flex flex-column">
-          <img src="@/image/pictures/github.png" alt="" draggable="false" title="我的GitHub"
-            @click="handleCilck('GitHub')" />
-          <span>GitHub</span>
+  <div class="firstView">
+    <div class="pos-a full-w first flex flex-ac flex-row">
+      <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
+      <div class="ml2">
+        <h1 class="fs7rem name ml6">R-Goose<span>🦖</span></h1>
+        <div class="title2-container">
+          <h2 class="title2" :class="{ 'title2Fade': isInputFinish }">{{ title2ArrayCopy }}</h2>
+          <span class="cursor" v-if="showCursor && !isInputFinish"></span>
         </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/csdn.png" alt="" draggable="false" title="我的CSDN" @click="handleCilck('CSDN')" />
-          <span>CSDN</span>
+        <div class="app-icon flex flex-row mt3 ml6" draggable="false">
+          <div class="flex flex-column">
+            <img src="@/image/pictures/github.png" alt="" draggable="false" title="我的GitHub"
+              @click="handleCilck('GitHub')" />
+            <span>GitHub</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/csdn.png" alt="" draggable="false" title="我的CSDN" @click="handleCilck('CSDN')" />
+            <span>CSDN</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/gitee.png" alt="" draggable="false" title="我的Gitee"
+              @click="handleCilck('Gitee')" />
+            <span>Gitee</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/wx.png" alt="" draggable="false" title="我的微信" @click="handleCilck('wx')" />
+            <span>微信</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/qq.png" alt="" draggable="false" title="我的QQ" @click="handleCilck('qq')" />
+            <span>QQ</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/bilibili.png" alt="" draggable="false" title="我的Bilibili"
+              @click="handleCilck('Bilibili')" />
+            <span>Bilibili</span>
+          </div>
+          <div class="flex flex-column">
+            <img src="@/image/pictures/小红书.png" alt="" draggable="false" title="我的小红书" @click="handleCilck('小红书')" />
+            <span>小红书</span>
+          </div>
         </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/gitee.png" alt="" draggable="false" title="我的Gitee"
-            @click="handleCilck('Gitee')" />
-          <span>Gitee</span>
-        </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/wx.png" alt="" draggable="false" title="我的微信" @click="handleCilck('wx')" />
-          <span>微信</span>
-        </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/qq.png" alt="" draggable="false" title="我的QQ" @click="handleCilck('qq')" />
-          <span>QQ</span>
-        </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/bilibili.png" alt="" draggable="false" title="我的Bilibili"
-            @click="handleCilck('Bilibili')" />
-          <span>Bilibili</span>
-        </div>
-        <div class="flex flex-column">
-          <img src="@/image/pictures/小红书.png" alt="" draggable="false" title="我的小红书" @click="handleCilck('小红书')" />
-          <span>小红书</span>
+      </div>
+      <div class="next-step">
+        <div class="red"></div>
+        <div class="green"></div>
+        <div class="yellow"></div>
+        <div class="blue"></div>
+        <InteractiveDecorations></InteractiveDecorations>
+        <div class="pos-a flex flex-center full-w mt87 flex-column">
+          <h2 class="fs1rem">往下看</h2>
+          <a class="fs2rem down" href="#top">☝🏻</a>
         </div>
       </div>
     </div>
-    <div class="next-step">
-      <div class="red"></div>
-      <div class="green"></div>
-      <div class="yellow"></div>
-      <div class="blue"></div>
-      <InteractiveDecorations></InteractiveDecorations>
-      <div class="pos-a flex flex-center full-w full-h mt46 flex-column">
-        <h2 class="fs1rem">往下看</h2>
-        <a class="fs2rem down" href="#top">☝🏻</a>
-      </div>
+    <div ref="pageRef.pageTwo">
+      {{ pageRef.pageTwo.title }}
+    </div>
+    <div ref="pageRef.pageThree">
+      {{ pageRef.pageThree.title }}
+    </div>
+    <div ref="pageRef.pageFour">
+      {{ pageRef.pageFour.title }}
+    </div>
+    <div ref="pageRef.pageFive">
+      {{ pageRef.pageFive.title }}
+    </div>
+    <div ref="pageRef.pageSix">
+      {{ pageRef.pageSix.title }}
+      <div></div>
     </div>
   </div>
+
 </template>
 <style scoped lang="scss">
+.firstView {
+  >div:not(:first-child) {
+    position: relative;
+    margin-top: 5vh;
+    height: 95vh;
+  }
+
+  &>div:last-child {
+    height: 83vh;
+  }
+}
+
 .mainImg {
   z-index: 5;
   box-shadow: #ebebeb 0px 0px 40px 10px;
 }
 
 .first {
-  height: 200vh;
+  height: 95vh;
   position: relative;
   // overflow: hidden;
 }
 
 .app-icon {
+  // margin-top: 10vh;
   position: relative;
   left: 7px;
   z-index: 2;
+  cursor: pointer;
 
   img {
     width: 40px;
@@ -166,15 +264,15 @@ onUnmounted(() => {
 
 .name {
   position: relative;
-  background: linear-gradient(to left top, #3dff64 30%, #71b8ff 60%, #8d3cff);
+  background: linear-gradient(to left, #3ea772, #50b39a, #7ebed8);
   background-clip: text;
   background-size: 200% auto;
   color: transparent;
   text-shadow:
-    0px 2px 10px rgba(86, 171, 255, 0.5),
-    0px 5px 15px rgba(141, 60, 255, 0.327);
+    0px 2px 10px #7ff7bb7e,
+    0px 5px 15px #6cd8bd38;
   z-index: 10;
-  animation: nameAnimate 5s linear infinite;
+  animation: nameAnimate 3s linear infinite;
 
   span {
     position: absolute;
@@ -187,6 +285,86 @@ onUnmounted(() => {
       text-shadow: #008b74 0px 5px 10px;
       font-size: 8rem !important;
     }
+  }
+}
+
+.title2-container {
+  margin-top: 2vh;
+  position: absolute;
+  width: 100%;
+  height: 3vh;
+  line-height: 3vh;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10vh;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .title2 {
+    position: relative;
+    font-weight: 400;
+    font-size: 1.5rem;
+  }
+
+  .cursor {
+    position: relative;
+    width: 0.1vw;
+    height: 3vh;
+    background-color: #333;
+    margin-left: 0.3vw;
+    animation: blink 0.15s step-end infinite;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300%;
+      height: 1%;
+      background-color: #333;
+      animation: blink 0.15s step-end infinite;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300%;
+      height: 1%;
+      background-color: #333;
+      animation: blink 0.15s step-end infinite;
+    }
+  }
+}
+
+@keyframes blink {
+
+  from,
+  to {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: #333;
+  }
+}
+
+.title2Fade {
+  animation: titleFade 5.1s ease-in-out infinite;
+}
+
+@keyframes titleFade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
   }
 }
 
