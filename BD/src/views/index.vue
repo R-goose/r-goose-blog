@@ -218,7 +218,7 @@ const logout = () => {
       rgba(240, 255, 255, 0.6),
       rgba(250, 240, 255, 0.6));
   // overflow: visible;
-  // position: absolute;
+  position: absolute;
 
   header {
     position: sticky;
