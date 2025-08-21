@@ -53,24 +53,31 @@ onMounted(async () => {
     <div class="toast-content">
       <h1>{{ toastText }}</h1>
       <!-- <img src="/src/image/pictures/TOF.png" alt=""> -->
+      <button @click="closeToast()">关闭</button>
     </div>
 
-    <button @click="closeToast()">关闭</button>
+
+
   </div>
 </template>
 <style scoped lang="scss">
 .r-toast {
-  position: sticky;
+  position: fixed;
   background-color: #f8c3c354;
-  top: 20vh;
-  left: 25vw;
-  width: 50vw;
-  height: 50vh;
-  z-index: 5999;
-  border-radius: 12% 11% 14% 6% / 28% 41% 16% 12%;
+  top: 0vh;
+  // left: 25vw;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  // border-radius: 12% 11% 14% 6% / 28% 41% 16% 12%;
   border: 1px solid #800000;
 
   .toast-content {
+    top: 0vh;
+    // left: 25vw;
+    width: 100vw;
+    height: 100vh;
+
     img {
       width: 50vw;
     }

@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from 'vue';
 import { RouterView } from 'vue-router'
-import themeChanger from '@/components/themeChanger.vue'
 
 const mainRef = ref(null);
 
@@ -40,7 +39,6 @@ onUnmounted(() => {
     <div class="full-w">
       <RouterView />
     </div>
-    <!-- <themeChanger></themeChanger> -->
   </div>
 </template>
 
@@ -61,13 +59,11 @@ body {
 .main {
   width: 100vw;
   height: 100%;
-  overflow: auto;
   user-select: none;
   -ms-overflow-style: none;
   scroll-snap-type: y mandatory;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  transform: translateZ(0);
   font-family: "钉钉进步体 Regular";
   font-variation-settings: normal;
 

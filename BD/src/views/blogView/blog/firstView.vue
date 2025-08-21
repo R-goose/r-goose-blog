@@ -173,7 +173,7 @@ onUnmounted(() => {
   text-shadow:
     0px 2px 10px rgba(86, 171, 255, 0.5),
     0px 5px 15px rgba(141, 60, 255, 0.327);
-  z-index: 9999;
+  z-index: 10;
   animation: nameAnimate 5s linear infinite;
 
   span {

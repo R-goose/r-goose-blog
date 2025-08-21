@@ -120,7 +120,7 @@ watch(viewportWidth, (newVal, oldVal) => {
 </script>
 
 <template>
-  <div class="theme-bg-color pos-a" @mousedown="startDrag" @mouseup="stopDrag" @mousemove="handleDrag"
+  <div class="theme-bg-color theme" @mousedown="startDrag" @mouseup="stopDrag" @mousemove="handleDrag"
     :style="{ left: `${x}px`, top: `${y}px` }" ref="changerRef" @click="changeTheme">
     <div :class="{ dragging: isDragging }">
       <span v-if="theme === 'light'">
@@ -134,6 +134,10 @@ watch(viewportWidth, (newVal, oldVal) => {
 </template>
 
 <style scoped lang="scss">
+.theme {
+  position: fixed;
+}
+
 .circle-l {
   left: 0;
 }

@@ -7,6 +7,8 @@ import myBlog from '@/views/blogView/blog/myBlog.vue'
 import dataView from '@/views/oaView/indexPage.vue'
 import dataScreen from '@/views/screenView/indexPage.vue'
 import rToast from '@/components/r-ui/r-toast.vue'
+import themeChanger from '@/components/themeChanger.vue'
+
 
 const router = useRouter();
 const route = useRoute();
@@ -137,6 +139,7 @@ const toTop = () => {
 }
 
 // 隐藏按钮
+const hideToTopButton = ref(false)
 const closeButton = (e) => {
   e.preventDefault();
   showToastFlag.value = true
@@ -160,7 +163,7 @@ const logout = () => {
 
 <template>
   <div class="main text-center" ref="aTop">
-    <header class="flex flex-row gap1vw">
+    <header class="flex flex-row">
       <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
         :class="{ active: item.isActive, show: !item.meta.public }" ref="guideRef">{{ item.name }}</span>
       <div class="other">
@@ -176,13 +179,14 @@ const logout = () => {
       </div>
     </header>
     <main>
+      <themeChanger></themeChanger>
       <!-- <component :is="navList[curremComponentIndex].component"></component> -->
       <router-view></router-view>
     </main>
     <!-- <aside class="left">
       <div>去到底部</div>
     </aside> -->
-    <aside class=" right" @click="toTop()" @contextmenu="closeButton($event)">
+    <aside class="right" @click="toTop()" @contextmenu="closeButton($event)">
       <img src="/src/image/icons/toTop.png" alt="" draggable="false">
     </aside>
     <footer>
@@ -205,15 +209,16 @@ const logout = () => {
 <style scoped lang="scss">
 .main {
   width: 100vw;
-  min-height: 100vh;
+  // min-height: 100vh;
+  height: 100%;
   background: linear-gradient(45deg,
       rgba(255, 240, 240, 0.6),
       rgba(255, 255, 220, 0.6),
       rgba(240, 255, 240, 0.6),
       rgba(240, 255, 255, 0.6),
       rgba(250, 240, 255, 0.6));
-  overflow: visible;
-  position: relative;
+  // overflow: visible;
+  // position: absolute;
 
   header {
     position: sticky;
@@ -221,20 +226,22 @@ const logout = () => {
     justify-content: left;
     align-items: center;
     width: 100%;
-    height: 6vh;
-    font-size: 1.3rem;
+    height: 5vh;
+    font-size: 1rem;
     color: #9e9e9e;
     font-weight: 300;
+    gap: 0.3vw;
     // border-bottom: #e2ffb59d 1px solid;
-    z-index: 8888;
+    z-index: 20;
 
     span {
       position: relative;
       width: auto;
       cursor: pointer;
-      padding: 0.5vh 0.8vw;
+      padding: 0.3vh 0.4vw;
       transition: all 0.3s ease;
-      z-index: 8889;
+      z-index: 21;
+      margin-left: 0.5vw;
 
       &:hover {
         border-color: #d5fffb;
@@ -326,7 +333,7 @@ const logout = () => {
   }
 
   aside.left {
-    position: sticky;
+    position: fixed;
     left: 0;
     top: 30vh;
     width: 10vw;
@@ -335,7 +342,7 @@ const logout = () => {
   }
 
   aside.right {
-    position: sticky;
+    position: fixed;
     left: 97vw;
     top: 30vh;
     width: 1.2vw;
@@ -365,8 +372,14 @@ const logout = () => {
     bottom: 0;
     width: 100%;
     height: 12vh;
-    background-color: #2c2c2c;
-    color: azure;
+    // background-color: #2c2c2c;
+    background: linear-gradient(45deg,
+        rgba(255, 240, 240),
+        rgba(255, 255, 220),
+        rgba(240, 255, 240),
+        rgba(240, 255, 255),
+        rgb(240, 255, 241));
+    // color: azure;
     line-height: 3vh;
 
     .space {
