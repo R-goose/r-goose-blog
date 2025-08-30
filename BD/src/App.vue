@@ -73,11 +73,8 @@ body {
 
     &-thumb {
       background: linear-gradient(180deg,
-          rgb(255, 212, 212),
-          rgb(255, 255, 178),
           rgb(205, 255, 205),
-          rgb(198, 253, 253),
-          rgb(239, 206, 255));
+          rgb(198, 253, 253));
       border-radius: 10px;
 
       &:active {

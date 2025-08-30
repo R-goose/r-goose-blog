@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, reactive, markRaw, watch } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, markRaw, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 
@@ -9,6 +9,7 @@ const pageHeight = ref(0)
 const viewportHeight = ref(0)
 const mainPageRef = ref(null)
 const pageTotalHeight = ref(0)
+const scrollTop = ref(0)
 const handleCilck = (name) => {
   const a = document.createElement('a')
   switch (name) {
@@ -38,9 +39,13 @@ const handleCilck = (name) => {
   a.click()
 }
 
-const updateHeights = () => {
-  const mainPageEl = mainPageRef.value?.$el;
+const updateHeights = async () => {
+  await nextTick()
+  const mainPageEl = mainPageRef.value;
   if (!mainPageEl) return;
+
+  scrollTop.value = mainPageEl.scrollTop;
+  console.log('元素滚动高度：', scrollTop.value); // 此时应正确打印高度
 
   // 子组件高度
   const mainPageHeight = {
@@ -61,10 +66,13 @@ const updateHeights = () => {
   // 视口高度
   viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
   pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
-  console.log('pageTotalHeight：', pageTotalHeight.value);
 }
 
 const pageRef = reactive({
+  pageOne: {
+    title: '烧鹅工作室',
+    pageHeightFromTop: 0,
+  },
   pageTwo: {
     title: '总览',
     pageHeightFromTop: 0,
@@ -125,20 +133,22 @@ watch(isInputFinish, (newVal) => {
 onMounted(async () => {
   updateHeights()
   window.addEventListener('resize', updateHeights);
+  // mainPageRef.value.addEventListener('scroll', updateHeights);
   title2Animate()
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateHeights);
+  // mainPageRef.value.removeEventListener('scroll', updateHeights);
   clearTimeout(reInputArrayTimeout)
 
 })
 </script>
 
 <template>
-  <div class="firstView">
-    <div class="pos-a full-w first flex flex-ac flex-row">
-      <img src="@/image/pictures/喝水.png" alt="" class="mainImg br-circle w500px h500px ml10" draggable="false" />
+  <div class="firstView" ref="mainPageRef">
+    <div class="pos-a full-w first flex flex-ac flex-row" ref="pageRef.pageOne">
+      <img src="/src/image/avatar/1myAvatar.png" alt="" class="mainImg br-circle ml10" draggable="false" />
       <div class="ml2">
         <h1 class="fs7rem name ml6">R-Goose<span>🦖</span></h1>
         <div class="title2-container">
@@ -212,6 +222,9 @@ onUnmounted(() => {
 </template>
 <style scoped lang="scss">
 .firstView {
+  height: auto;
+  overflow: hidden;
+
   >div:not(:first-child) {
     position: relative;
     margin-top: 5vh;
@@ -225,7 +238,11 @@ onUnmounted(() => {
 
 .mainImg {
   z-index: 5;
-  box-shadow: #ebebeb 0px 0px 40px 10px;
+  width: 30vw;
+  height: 30vw;
+  // border-radius: 5vw;
+  box-shadow: #ffffff 0px 0px 40px 10px;
+
 }
 
 .first {
@@ -268,6 +285,7 @@ onUnmounted(() => {
   background-clip: text;
   background-size: 200% auto;
   color: transparent;
+  -webkit-text-stroke: 0.1rem #ffffff;
   text-shadow:
     0px 2px 10px #7ff7bb7e,
     0px 5px 15px #6cd8bd38;
@@ -306,6 +324,7 @@ onUnmounted(() => {
     position: relative;
     font-weight: 400;
     font-size: 1.5rem;
+    -webkit-text-stroke: 1px #2c2c2c;
   }
 
   .cursor {

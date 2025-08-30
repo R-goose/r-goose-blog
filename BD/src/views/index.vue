@@ -233,6 +233,7 @@ onUnmounted(() => {
     gap: 0.3vw;
     // border-bottom: #e2ffb59d 1px solid;
     z-index: 20;
+    // -webkit-text-stroke: 1px #ffffff;
 
     span {
       position: relative;
@@ -278,6 +279,7 @@ onUnmounted(() => {
       background: linear-gradient(to right, #89bb39, #7da2d1);
       background-clip: text;
       color: transparent;
+      // -webkit-text-stroke: 0.5px #89bb39;
     }
 
     .other {
