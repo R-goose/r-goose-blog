@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, reactive, markRaw } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import scrollBar from '@/components/scrollBar.vue'
 import firstView from './blogView/blog/firstView.vue';
 import myBlog from '@/views/blogView/blog/myBlog.vue'
 import dataView from '@/views/oaView/indexPage.vue'
