@@ -5,7 +5,7 @@ import { onMounted, ref } from 'vue';
 const particles = ref([]);
 
 onMounted(() => {
-  particles.value = Array.from({ length: 100 }, () => ({
+  particles.value = Array.from({ length: 30 }, () => ({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
     size: Math.random() * 5 + 2,

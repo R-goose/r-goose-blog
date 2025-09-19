@@ -2,6 +2,11 @@
 import { ref, onMounted, onUnmounted, reactive, markRaw, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
+import overView from './firstViewComponents/overView.vue';
+import game from './firstViewComponents/game.vue';
+import social from './firstViewComponents/social.vue';
+import tenical from './firstViewComponents/tenical.vue';
+import introduce from './firstViewComponents/introduce.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -203,18 +208,23 @@ onUnmounted(() => {
     </div>
     <div ref="pageRef.pageTwo">
       {{ pageRef.pageTwo.title }}
+      <overView></overView>
     </div>
     <div ref="pageRef.pageThree">
       {{ pageRef.pageThree.title }}
+      <introduce></introduce>
     </div>
     <div ref="pageRef.pageFour">
       {{ pageRef.pageFour.title }}
+      <social></social>
     </div>
     <div ref="pageRef.pageFive">
       {{ pageRef.pageFive.title }}
+      <tenical></tenical>
     </div>
     <div ref="pageRef.pageSix">
       {{ pageRef.pageSix.title }}
+      <game></game>
       <div></div>
     </div>
   </div>
@@ -262,7 +272,7 @@ onUnmounted(() => {
     width: 40px;
     height: 40px;
     border-radius: 20%;
-    margin-right: 10px;
+    margin-right: 20px;
   }
 
   span {
