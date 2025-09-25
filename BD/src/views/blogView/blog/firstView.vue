@@ -207,23 +207,23 @@ onUnmounted(() => {
       </div>
     </div>
     <div ref="pageRef.pageTwo">
-      {{ pageRef.pageTwo.title }}
+      <!-- {{ pageRef.pageTwo.title }} -->
       <overView></overView>
     </div>
     <div ref="pageRef.pageThree">
-      {{ pageRef.pageThree.title }}
+      <!-- {{ pageRef.pageThree.title }} -->
       <introduce></introduce>
     </div>
     <div ref="pageRef.pageFour">
-      {{ pageRef.pageFour.title }}
+      <!-- {{ pageRef.pageFour.title }} -->
       <social></social>
     </div>
     <div ref="pageRef.pageFive">
-      {{ pageRef.pageFive.title }}
+      <!-- {{ pageRef.pageFive.title }} -->
       <tenical></tenical>
     </div>
     <div ref="pageRef.pageSix">
-      {{ pageRef.pageSix.title }}
+      <!-- {{ pageRef.pageSix.title }} -->
       <game></game>
       <div></div>
     </div>

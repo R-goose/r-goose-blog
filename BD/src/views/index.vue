@@ -230,7 +230,7 @@ onUnmounted(() => {
     color: #9e9e9e;
     font-weight: 300;
     gap: 0.3vw;
-    // border-bottom: #e2ffb59d 1px solid;
+    border-bottom: #e4fff6 1px solid;
     z-index: 20;
     // -webkit-text-stroke: 1px #ffffff;
 
