@@ -1,15 +1,14 @@
 <script setup>
 import { ref, onMounted, onUnmounted, reactive, markRaw, watch, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
-import overView from './firstViewComponents/overView.vue';
-import game from './firstViewComponents/game.vue';
-import social from './firstViewComponents/social.vue';
-import tenical from './firstViewComponents/tenical.vue';
-import introduce from './firstViewComponents/introduce.vue';
+import overView from './firstViewComponents/overView.vue'
+import game from './firstViewComponents/game.vue'
+import tenical from './firstViewComponents/tenical.vue'
+import introduce from './firstViewComponents/introduce.vue'
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 const pageHeight = ref(0)
 const viewportHeight = ref(0)
 const mainPageRef = ref(null)
@@ -46,59 +45,20 @@ const handleCilck = (name) => {
 
 const updateHeights = async () => {
   await nextTick()
-  const mainPageEl = mainPageRef.value;
-  if (!mainPageEl) return;
+  const mainPageEl = mainPageRef.value
+  if (!mainPageEl) return
 
-  scrollTop.value = mainPageEl.scrollTop;
-  console.log('元素滚动高度：', scrollTop.value); // 此时应正确打印高度
-
-  // 子组件高度
   const mainPageHeight = {
     offset: mainPageEl.offsetHeight,
     scroll: mainPageEl.scrollHeight,
-    client: mainPageEl.clientHeight
-  };
+    client: mainPageEl.clientHeight,
+  }
 
-  // 整个页面的高度
-  pageHeight.value = Math.max(
-    document.body.scrollHeight,
-    document.body.offsetHeight,
-    document.documentElement.clientHeight,
-    document.documentElement.scrollHeight,
-    document.documentElement.offsetHeight
-  );
-
-  // 视口高度
-  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
-  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
+  console.log("整个页面的高度", mainPageHeight);
 }
 
-const pageRef = reactive({
-  pageOne: {
-    title: '烧鹅工作室',
-    pageHeightFromTop: 0,
-  },
-  pageTwo: {
-    title: '总览',
-    pageHeightFromTop: 0,
-  },
-  pageThree: {
-    title: '个人介绍',
-    pageHeightFromTop: 0,
-  },
-  pageFour: {
-    title: '社交圈',
-    pageHeightFromTop: 0,
-  },
-  pageFive: {
-    title: '技能',
-    pageHeightFromTop: 0,
-  },
-  pageSix: {
-    title: '游戏',
-    pageHeightFromTop: 0,
-  },
-})
+const totalPage = ref(null)
+
 
 // 副标题打字动画
 const title2 = ref('欢迎来到烧鹅工作室,这里是R-Goose的个人博客')
@@ -137,16 +97,22 @@ watch(isInputFinish, (newVal) => {
 })
 onMounted(async () => {
   updateHeights()
-  window.addEventListener('resize', updateHeights);
-  // mainPageRef.value.addEventListener('scroll', updateHeights);
+  window.addEventListener('resize', updateHeights)
+  // 恢复并优化滚动监听：加判断避免空值
+  if (mainPageRef.value) {
+    mainPageRef.value.addEventListener('scroll', updateHeights)
+  }
   title2Animate()
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateHeights);
-  // mainPageRef.value.removeEventListener('scroll', updateHeights);
+  window.removeEventListener('resize', updateHeights)
+  // 优化：卸载时先判断是否存在
+  if (mainPageRef.value) {
+    mainPageRef.value.removeEventListener('scroll', updateHeights)
+  }
   clearTimeout(reInputArrayTimeout)
-
+  clearInterval(reInputArrayInterval)
 })
 </script>
 
@@ -157,7 +123,7 @@ onUnmounted(() => {
       <div class="ml2">
         <h1 class="fs7rem name ml6">R-Goose<span>🦖</span></h1>
         <div class="title2-container">
-          <h2 class="title2" :class="{ 'title2Fade': isInputFinish }">{{ title2ArrayCopy }}</h2>
+          <h2 class="title2" :class="{ title2Fade: isInputFinish }">{{ title2ArrayCopy }}</h2>
           <span class="cursor" v-if="showCursor && !isInputFinish"></span>
         </div>
         <div class="app-icon flex flex-row mt3 ml6" draggable="false">
@@ -206,29 +172,20 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div ref="pageRef.pageTwo">
-      <!-- {{ pageRef.pageTwo.title }} -->
+    <div ref="totalPage">
       <overView></overView>
     </div>
-    <div ref="pageRef.pageThree">
-      <!-- {{ pageRef.pageThree.title }} -->
+    <div ref="">
       <introduce></introduce>
     </div>
-    <div ref="pageRef.pageFour">
-      <!-- {{ pageRef.pageFour.title }} -->
-      <social></social>
-    </div>
-    <div ref="pageRef.pageFive">
-      <!-- {{ pageRef.pageFive.title }} -->
+    <div ref="">
       <tenical></tenical>
     </div>
-    <div ref="pageRef.pageSix">
-      <!-- {{ pageRef.pageSix.title }} -->
+    <div ref="">
       <game></game>
       <div></div>
     </div>
   </div>
-
 </template>
 <style scoped lang="scss">
 .firstView {
@@ -252,7 +209,6 @@ onUnmounted(() => {
   height: 30vw;
   // border-radius: 5vw;
   box-shadow: #ffffff 0px 0px 40px 10px;
-
 }
 
 .first {

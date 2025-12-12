@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import cocImg from '@/image/pictures/coc.png';
 import brawlStarsImg from '@/image/pictures/荒野乱斗.png';
 import genshinImg from '@/image/pictures/原神.png';
@@ -7,125 +7,169 @@ import palworldImg from '@/image/pictures/Palworld.png';
 import kingdomRushImg from '@/image/pictures/KingdomRush.png';
 import partyAnimalsImg from '@/image/pictures/PartyAnimals.png';
 
+const ROW_COUNT = 6;
+
 const details = ref({
   gameList: [
     { title: '我的常玩', isTitle: true },
-    { name: '部落冲突 Clash of Clans', img: cocImg, introduction: '塔防策略游戏，玩了很长时间' },
-    { name: '荒野乱斗 Brawl Stars', img: brawlStarsImg, introduction: '类moba游戏，手机端游戏' },
-    { name: '原神 Genshin Impact', img: genshinImg, introduction: '开放大世界类游戏，我当养成游戏玩了' },
-    { name: '幻兽帕鲁 Palworld', img: palworldImg, introduction: '开放大世界类游戏，可养成，可战斗，也是在Steam上玩的' },
-    { name: '王国保卫战 Kingdom Rush', img: kingdomRushImg, introduction: '塔防类游戏，主要是在Steam上玩' },
-    { name: '猛兽派对 Party Animals', img: partyAnimalsImg, introduction: '小动物打架游戏，联机才好玩' }
+    { name: '部落冲突 Clash of Clans', img: cocImg, introduction: '塔防策略游戏，玩了很长时间', isHover: false, isHover: false },
+    { name: '荒野乱斗 Brawl Stars', img: brawlStarsImg, introduction: '类moba游戏，手机端游戏', isHover: false },
+    { name: '原神 Genshin Impact', img: genshinImg, introduction: '开放大世界类游戏，我当养成游戏玩了', isHover: false },
+    { name: '幻兽帕鲁 Palworld', img: palworldImg, introduction: '开放大世界类游戏，可养成，可战斗，也是在Steam上玩的', isHover: false },
+    { name: '王国保卫战 Kingdom Rush', img: kingdomRushImg, introduction: '塔防类游戏，主要是在Steam上玩', isHover: false },
+    { name: '猛兽派对 Party Animals', img: partyAnimalsImg, introduction: '小动物打架游戏，联机才好玩', isHover: false }
   ],
   technicalStack: [
     { title: '我的常用技术栈', isTitle: true },
-    { name: 'HTML', color: '#FFCCCC', introduction: '语义化标签构建页面骨架' },
-    { name: 'CSS', color: '#CCEEFF', introduction: 'Flex/Grid布局，响应式设计' },
-    { name: 'JavaScript', color: '#FFF2CC', introduction: 'ES6+，DOM操作，异步编程' },
-    { name: 'Vue', color: '#41bf83', introduction: 'Vue3+Composition API，Pinia' },
-    { name: 'C', color: '#E6CCFF', introduction: '算法数据结构基础实现' },
-    { name: 'Java', color: '#CCFFFA', introduction: 'Spring Boot，基础API开发' }
+    { name: 'HTML', color: '#FFCCCC', introduction: '语义化标签构建页面骨架', isHover: false },
+    { name: 'CSS', color: '#CCEEFF', introduction: 'Flex/Grid布局，响应式设计', isHover: false },
+    { name: 'JavaScript', color: '#FFF2CC', introduction: 'ES6+，DOM操作，异步编程', isHover: false },
+    { name: 'Vue', color: '#41bf83', introduction: 'Vue3+Composition API，Pinia', isHover: false },
+    { name: 'C', color: '#E6CCFF', introduction: '算法数据结构基础实现', isHover: false },
+    { name: 'Java', color: '#CCFFFA', introduction: 'Spring Boot，基础API开发', isHover: false }
   ],
   introduction: [
     { title: '我的介绍', isTitle: true },
-    { name: 'infp', color: '#f07455', introduction: '内向好奇，富有同理心' },
-    { name: '辣椒狂', color: '#CCFFFA', introduction: '无辣不欢，研究辣椒料理' },
-    { name: '羽毛球', color: '#41bf83', introduction: '每周固定运动，享受挥拍' },
-    { name: '音乐', color: '#E6CCFF', introduction: '独立音乐与电影配乐爱好者' },
+    { name: 'infp', color: '#f07455', introduction: '内向好奇，富有同理心', isHover: false },
+    { name: '辣椒狂', color: '#CCFFFA', introduction: '无辣不欢，研究辣椒料理', isHover: false },
+    { name: '羽毛球', color: '#41bf83', introduction: '每周固定运动，享受挥拍', isHover: false },
+    { name: '音乐', color: '#E6CCFF', introduction: '独立音乐与电影配乐爱好者', isHover: false },
   ]
 });
-const gameListItem = ref(1);
-const technicalStackItem = ref(1);
-const introductionItem = ref(1);
 
+const makeRepeated = (items) => Array(6).fill(items).flat();
+
+const repeatedGameItems = computed(() => {
+  const items = details.value.gameList.filter(item => !item.isTitle);
+  return makeRepeated(items);
+});
+
+const repeatedTechItems = computed(() => {
+  const items = details.value.technicalStack.filter(item => !item.isTitle);
+  return makeRepeated(items);
+});
+
+const repeatedIntroItems = computed(() => {
+  const items = details.value.introduction.filter(item => !item.isTitle);
+  return makeRepeated(items);
+});
+
+// 底部详情逻辑
+const chooseedArray = ref(null);
+const detailRef = ref(null);
+const childWidth = ref('auto');
+const focusChildWidth = ref('auto');
+
+const checkChooseed = (index) => {
+  if (index === 0) {
+    chooseedArray.value = details.value.gameList.filter(item => !item.isTitle);
+  } else if (index === 1) {
+    chooseedArray.value = details.value.technicalStack.filter(item => !item.isTitle);
+  } else if (index === 2) {
+    chooseedArray.value = details.value.introduction.filter(item => !item.isTitle);
+  }
+  updateChildWidth();
+};
+
+const updateChildWidth = () => {
+  if (detailRef.value && chooseedArray.value?.length > 0) {
+    const containerWidth = detailRef.value.clientWidth;
+    focusChildWidth.value = `${containerWidth / 2}px`;
+    childWidth.value = `${containerWidth / chooseedArray.value.length}px`;
+  }
+};
+
+const focusChild = (index) => {
+  chooseedArray.value.forEach((item, idx) => {
+    item.isHover = idx === index;
+  });
+}
+
+const focusChildOut = () => {
+  updateChildWidth();
+  chooseedArray.value.forEach(item => {
+    item.isHover = false;
+  });
+}
+
+onMounted(() => {
+  chooseedArray.value = details.value.gameList.filter(item => !item.isTitle);
+  updateChildWidth();
+  window.addEventListener('resize', updateChildWidth);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateChildWidth);
+});
 </script>
 
 <template>
   <div class="overview-container">
     <div class="top-container">
-      <div class="container-box game-box">
-        <div class="text-box">游 戏 库</div>
-        <div v-for="value in 10" :key="value">
-          <div class="icons" v-for="value in 10" :key="value">
-            <span v-for="(item, value) in details.gameList" :key="value">
-              <img v-if="!item.isTitle" :src="item.img" :alt="item.name">
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="detail-box box1">
-        <div class="content">
-          <div class="inner-details">
-            <div :style="{ visibility: gameListItem > 1 ? 'visible' : 'hidden' }" @click="gameListItem--" class="larr">
-              &larr;</div>
-            <img :src="details.gameList[gameListItem].img" alt="">
-            <div class="details-text">
-              <div>名称：{{ details.gameList[gameListItem].name }}</div>
-              <div>简介：{{ details.gameList[gameListItem].introduction }}</div>
+      <!-- 游戏 -->
+      <div class="item-group">
+        <div class="container-box game-box">
+          <div class="rotated-wrapper">
+            <div v-for="rowIndex in ROW_COUNT" :key="`game-row-${rowIndex}`" class="scrolling-row"
+              :style="{ animationDelay: `-${rowIndex * 5}s` }">
+              <img v-for="(item, index) in repeatedGameItems" :key="`game-${rowIndex}-${index}`" :src="item.img"
+                :alt="item.name" class="scroll-item" />
             </div>
-            <div :style="{ visibility: gameListItem < details.gameList.length - 1 ? 'visible' : 'hidden' }"
-              @click="gameListItem++" class="rarr">&rarr;</div>
           </div>
         </div>
-        <span>{{ details.gameList[0].title }}</span>
-      </div>
-      <div class="container-box technical-box">
-        <div class="text-box">技 术 栈</div>
-        <div v-for="value in 10" :key="value">
-          <div class="icons" v-for="value in 10" :key="value">
-            <span v-for="(item, value) in details.technicalStack" :key="value">
-              <span v-if="!item.isTitle" :style="{ backgroundColor: item.color }" style="color: #ffffff;">{{ item.name
-              }}</span>
-            </span>
-          </div>
+        <div class="detail-box" @click="checkChooseed(0)">
+          <span>查看详情</span>
         </div>
       </div>
-      <div class="detail-box box2">
-        <div class="content">
-          <div class="inner-details">
-            <div :style="{ visibility: technicalStackItem > 1 ? 'visible' : 'hidden' }" @click="technicalStackItem--"
-              class="larr">
-              &larr;</div>
-            <div class="details-text">
-              <div>名称：{{ details.technicalStack[technicalStackItem].name }}</div>
-              <div>简介：{{ details.technicalStack[technicalStackItem].introduction }}</div>
+
+      <!-- 技术栈 -->
+      <div class="item-group">
+        <div class="container-box technical-box">
+          <div class="rotated-wrapper">
+            <div v-for="rowIndex in ROW_COUNT" :key="`tech-row-${rowIndex}`" class="scrolling-row"
+              :style="{ animationDelay: `-${rowIndex * 5}s` }">
+              <span v-for="(item, index) in repeatedTechItems" :key="`tech-${rowIndex}-${index}`" class="scroll-item"
+                :style="{ backgroundColor: item.color }">
+                {{ item.name }}
+              </span>
             </div>
-            <div :style="{ visibility: technicalStackItem < details.technicalStack.length - 1 ? 'visible' : 'hidden' }"
-              @click="technicalStackItem++" class="rarr">&rarr;</div>
           </div>
         </div>
-        <span>{{ details.technicalStack[0].title }}</span>
-      </div>
-      <div class="container-box introduction-box">
-        <div class="text-box">介 绍</div>
-        <div v-for="value in 10" :key="value">
-          <div class="icons" v-for="value in 10" :key="value">
-            <span v-for="(item, value) in details.introduction" :key="value">
-              <span v-if="!item.isTitle" :style="{ backgroundColor: item.color }" style="color: #ffffff;">{{ item.name
-                }}</span>
-            </span>
-          </div>
+        <div class="detail-box" @click="checkChooseed(1)">
+          <span>查看详情</span>
         </div>
       </div>
-      <div class="detail-box box3">
-        <div class="content">
-          <div class="inner-details">
-            <div :style="{ visibility: introductionItem > 1 ? 'visible' : 'hidden' }" @click="introductionItem--"
-              class="larr">
-              &larr;</div>
-            <div class="details-text">
-              <div>名称：{{ details.introduction[introductionItem].name }}</div>
-              <div>简介：{{ details.introduction[introductionItem].introduction }}</div>
+
+      <!-- 个人介绍 -->
+      <div class="item-group">
+        <div class="container-box introduction-box">
+          <div class="rotated-wrapper">
+            <div v-for="rowIndex in ROW_COUNT" :key="`intro-row-${rowIndex}`" class="scrolling-row"
+              :style="{ animationDelay: `-${rowIndex * 5}s` }">
+              <span v-for="(item, index) in repeatedIntroItems" :key="`intro-${rowIndex}-${index}`" class="scroll-item"
+                :style="{ backgroundColor: item.color }">
+                {{ item.name }}
+              </span>
             </div>
-            <div :style="{ visibility: introductionItem < details.introduction.length - 1 ? 'visible' : 'hidden' }"
-              @click="introductionItem++" class="rarr">&rarr;</div>
           </div>
         </div>
-        <span>{{ details.introduction[0].title }}</span>
+        <div class="detail-box" @click="checkChooseed(2)">
+          <span>查看详情</span>
+        </div>
       </div>
     </div>
+
+    <!-- 底部详情卡片 -->
     <div class="bottom-container">
-      <div class="center-box"></div>
+      <div class="center-box" ref="detailRef">
+        <div v-for="(item, index) in chooseedArray" :key="index" class="card"
+          :style="{ width: item.isHover ? focusChildWidth : childWidth }" :class="{ mask: !item.isHover }"
+          @mouseover="focusChild(index)" @mouseout="focusChildOut(index)">
+          <img :src=item.img alt="" class="detail-img">
+          <div class="title">{{ item.name }}</div>
+          <div class="description">{{ item.introduction }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -143,291 +187,191 @@ const introductionItem = ref(1);
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 30vh;
-    gap: 1vw;
+    height: 25vh;
+    gap: 2vw;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    margin-top: 1vh;
+
+    .item-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1vh;
+      width: 30vw;
+    }
 
     .detail-box {
-      position: absolute;
-      top: -13%;
-      left: 11.5vw;
-      transform: translate(0%, 100%);
-      width: 25vw;
+      width: 30vw;
       height: 20vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      top: -17vh;
+      padding: 0.5vw;
       font-size: 2.5vw;
-      font-weight: 800;
-      color: #ffffff;
-      z-index: 2;
+      font-weight: 100;
+      color: #be991f;
       border-radius: 1vw;
-
-      .content {
-        position: absolute;
-        bottom: 19%;
-        border: #ffffff solid 0.2vh;
-        border-radius: 1vw;
-        width: 92%;
-        height: 40%;
-
-
-        .inner-details {
-          width: 100%;
-          height: 100%;
-          font-size: 1rem;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: space-around;
-
-          .larr {
-            width: 1vw;
-            height: 1vw;
-            line-height: 1vw;
-            position: absolute;
-            left: 0.5vw;
-            border-radius: 0.4vw;
-            border: #ffffff solid 0.2vh;
-            border-left: none;
-            border-right: none;
-          }
-
-          .rarr {
-            width: 1vw;
-            height: 1vw;
-            line-height: 1vw;
-            position: absolute;
-            right: 0.5vw;
-            border-radius: 0.4vw;
-            border: #ffffff solid 0.2vh;
-            border-left: none;
-            border-right: none;
-          }
-
-          .details-text {
-            position: relative;
-            width: 60%;
-            left: -5%;
-          }
-
-          img {
-            width: 2.3vw;
-            border-radius: 0.8vh;
-            margin-left: 1.5vw;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-
-            &:hover {
-              scale: 1.1;
-            }
-          }
-        }
-      }
+      background: linear-gradient(to top, #fffeef 50%, #d9eaff);
+      border-bottom: #ffe58f solid 0.2vw;
+      // box-shadow: inset 0 0 2vh #ffffff;
+      position: relative;
+      box-sizing: border-box;
+      z-index: 1;
+      cursor: pointer;
 
       span {
         position: absolute;
         height: 2vh;
         line-height: 2vh;
-        bottom: 0;
-        font-size: 1rem;
-      }
-    }
-
-    .box1 {
-      background-color: #f07455;
-      border-bottom: #f07455 solid 0.2vw;
-      transition: all 0.3s ease-in-out;
-
-      &:hover {
-        transform: translate(0%, 150%);
-      }
-    }
-
-    .box2 {
-      margin-left: 1vw;
-      transform: translate(100%, 100%);
-      background-color: #83f062;
-      border-bottom: #83f062 solid 0.2vw;
-      transition: all 0.3s ease-in-out;
-
-      &:hover {
-        transform: translate(100%, 150%);
-      }
-    }
-
-    .box3 {
-      margin-left: 27vw;
-      transform: translate(100%, 100%);
-      background-color: #5ccbf7;
-      border-bottom: #5ccbf7 solid 0.2vw;
-      transition: all 0.3s ease-in-out;
-
-      &:hover {
-        transform: translate(100%, 150%);
+        bottom: 0.5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.1rem;
       }
     }
 
     .container-box {
-      position: relative;
-      width: 25vw;
+      width: 30vw;
       height: 20vh;
-      border-radius: 1vw;
-      box-shadow: inset 0 0 1vh #dddddd;
-      background-image: linear-gradient(to left bottom, #ffffff, #effffc);
-      z-index: 3;
-
-      .text-box {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2.5vw;
-        font-weight: 800;
-        z-index: 4;
-        background-color: #ffffff49;
-        // color: #d4d4d4cb;
-      }
-    }
-
-    .game-box {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
+      border-radius: 0.5vw;
+      box-shadow: 0 0 1vh #d3d3d3;
+      background: linear-gradient(-150deg,
+          rgba(255, 240, 240),
+          rgba(255, 255, 220),
+          rgba(240, 255, 240),
+          rgba(240, 255, 255),
+          rgb(240, 255, 241));
+      position: relative;
       overflow: hidden;
-      color: #f07455;
-      border-top: #f07455 solid 0.2vh;
-
-      .icons {
-        position: relative;
-        width: 150%;
-        transform: rotateZ(-25deg);
-        display: flex;
-        margin-right: -4vw;
-        animation: iconsMoving 200s linear infinite;
-        top: 9vh;
-        margin-top: 5vh;
-        filter: blur(0.3vh);
-
-        img {
-          width: 2.3vw;
-          border-radius: 0.8vh;
-          margin-right: 5vw;
-          box-shadow: #d4d4d4cb -1.5vw 1vw 3vh;
-          transition: all 0.2s ease-in-out;
-          cursor: pointer;
-
-          &:hover {
-            scale: 1.2;
-          }
-        }
-      }
+      z-index: 2;
+      border: #f1f1f1 solid 1px;
+      // border-bottom: #242424 solid 0.3vw;
     }
 
-    .technical-box {
+    .rotated-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      width: 200%;
+      height: 200%;
+      transform-origin: center;
+      pointer-events: none;
+      // background-image: linear-gradient(to bottom, #ffffff, #a1ffee);
+    }
+
+    .scrolling-row {
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
       white-space: nowrap;
-      border-top: #83f062 solid 0.2vh;
-      color: #83f062;
-      overflow: hidden;
+      width: max-content;
+      margin-top: 7vh;
+      animation: scrollLeftMulti 300s linear infinite;
+    }
 
-      .icons {
-        position: relative;
-        transform: rotateZ(-25deg);
-        display: flex;
-        margin-right: -10vw;
-        animation: iconsMoving 100s linear infinite;
-        top: 9vh;
-        margin-top: 5vh;
+    .scroll-item {
+      flex-shrink: 0;
+      border-radius: 0.8vh;
+      transition: all 0.2s ease-in-out;
+      cursor: default;
+      pointer-events: auto;
 
-        span {
-          width: auto;
-          border-radius: 0.8vh;
-          padding: 0vw 1vw;
-          margin-right: 2vw;
-          transition: all 0.2s ease-in-out;
-          cursor: pointer;
-          filter: blur(0.1vh);
-
-          &:hover {
-            scale: 1.2;
-          }
-        }
+      &:hover {
+        transform: scale(1.2);
       }
     }
 
-    .introduction-box {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      border-top: #5ccbf7 solid 0.2vh;
-      color: #5ccbf7;
-      overflow: hidden;
+    .game-box .scroll-item {
+      width: 2.5vw;
+      margin-right: 5vw;
+      box-shadow: #cfcfcf 0 1vw 3vh;
+    }
 
-      .icons {
-        position: relative;
-        width: 150%;
-        transform: rotateZ(-25deg);
-        display: flex;
-        margin-right: -9vw;
-        animation: iconsMoving 100s linear infinite;
-        top: 9vh;
-        margin-top: 5vh;
-
-        span {
-          width: 2.3vw;
-          border-radius: 0.8vh;
-          padding: 0vw 1vw;
-          margin-right: 5vw;
-          transition: all 0.2s ease-in-out;
-          cursor: pointer;
-          filter: blur(0.1vh);
-
-          &:hover {
-            scale: 1.2;
-          }
-        }
-      }
+    .technical-box .scroll-item,
+    .introduction-box .scroll-item {
+      padding: 0.3vw 1vw;
+      margin-right: 2vw;
+      color: #242424;
+      box-shadow: #cfcfcf -0.5vw 1vw 4vh;
     }
   }
 
   .bottom-container {
     display: flex;
-    flex-direction: column;
+    flex: 1;
     align-items: center;
-    width: 100%;
-    height: 60vh;
-    gap: 1vw;
+    width: 94vw;
+    position: relative;
+    bottom: 1vh;
     justify-content: center;
-    // background-color: #4b2f2f;
 
     .center-box {
-      width: 50vh;
-      height: 50vh;
-      border-radius: 50%;
-      box-shadow: 0 0 0.2vh #5c5a5f;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      border-right: #888888 solid 0.15vw;
+
+      .card {
+        border-left: #888888 solid 0.15vw;
+        border-top: #888888 solid 0.15vw;
+        border-bottom: #888888 solid 0.15vw;
+        background-color: #ffffff;
+        height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+
+        // &::after {
+        //   content: "";
+        //   position: absolute;
+        //   top: 0;
+        //   left: 0;
+        //   width: 100%;
+        //   height: 100%;
+        //   background-color: rgba(0, 0, 0, 0.226);
+        //   z-index: 1;
+        //   transition: all 0.2s ease-in-out;
+        //   // opacity: 0;
+        // }
+
+        .detail-img {
+          width: 100%;
+          object-fit: contain;
+          position: relative;
+          top: 0;
+        }
+
+        .title {
+          position: relative;
+          z-index: 2;
+          font-size: 1.5rem;
+          font-weight: 500;
+          color: #333333;
+          margin-top: 1rem;
+        }
+
+
+      }
     }
   }
 }
 
-@keyframes iconsMoving {
+.mask {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 500;
+}
+
+@keyframes scrollLeftMulti {
   0% {
-    transform: rotateZ(-25deg) translate(-0%, 100%);
+    transform: translateX(-50%);
   }
 
   100% {
-    transform: rotateZ(-25deg) translate(100%, -50%);
+    transform: translateX(50%);
   }
 }
 </style>

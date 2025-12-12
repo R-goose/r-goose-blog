@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-// 粒子效果
 const particles = ref([]);
 
 onMounted(() => {
@@ -14,7 +13,6 @@ onMounted(() => {
     angle: Math.random() * Math.PI * 2
   }));
 
-  // 动画循环
   const animate = () => {
     particles.value.forEach(p => {
       p.angle += p.speed * 0.01;
@@ -33,7 +31,6 @@ onMounted(() => {
 
 <template>
   <div class="interactive-decorations">
-    <!-- 粒子 -->
     <div v-for="(p, i) in particles" :key="i" class="particle" :style="{
       left: `${p.x}px`,
       top: `${p.y}px`,
