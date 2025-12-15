@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, reactive, markRaw } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, markRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import firstView from './blogView/blog/firstView.vue';
 import myBlog from '@/views/blogView/blog/myBlog.vue'
@@ -11,6 +11,7 @@ import themeChanger from '@/components/themeChanger.vue'
 
 const router = useRouter();
 const route = useRoute();
+const isFirstPage = ref(false)
 const pageHeight = ref(0)
 const viewportHeight = ref(0)
 const mainPageRef = ref(null)
@@ -80,7 +81,7 @@ const navList = reactive([
     name: '首页',
     isActive: true,
     routeName: 'firstView',
-    component: markRaw(firstView),
+    component: markRaw(firstView),// 使用markRaw防止组件被响应式处理
     meta: {
       public: true,
     }
@@ -116,6 +117,11 @@ const guideRef = ref(null)
 const changePage = (curremPageIndex) => {
   navList.forEach((item, index) => {
     item.isActive = index === curremPageIndex;
+    if (item.name === '首页') {
+      isFirstPage.value = true
+    } else {
+      isFirstPage.value = false
+    }
   })
   curremComponentIndex.value = curremPageIndex;
   router.push({ name: navList[curremPageIndex].routeName })
@@ -147,11 +153,19 @@ const closeButton = (e) => {
 const logout = () => {
   router.push({ name: 'login' })
 }
+
+watch(() => route.name, (newName) => {
+  isFirstPage.value = newName === 'firstView'
+})
+
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights);
   curremComponentIndex.value = 0
   router.push({ name: navList[curremComponentIndex.value].routeName })
+  isFirstPage.value = router.currentRoute.value.name === 'firstView'
+  console.log('isFirstPage.value', isFirstPage.value);
+
 })
 
 onUnmounted(() => {
@@ -185,22 +199,10 @@ onUnmounted(() => {
     <!-- <aside class="left">
       <div>去到底部</div>
     </aside> -->
-    <aside class="right" @click="toTop()" @contextmenu="closeButton($event)">
+    <aside class="right" @click="toTop()" @contextmenu="closeButton($event)" v-if="isFirstPage">
       <img src="/src/image/icons/toTop.png" alt="" draggable="false">
     </aside>
-    <footer>
-      <div>
-        <div class="flex flex-colums flex-center">
-          <div class="text">© 2025 R-Goose</div>
-          <div class="space"></div>
-          <div class="text">设计师：R-Goose</div>
-          <div class="space"></div>
-          <div class="text">创建：vue3.x</div>
-        </div>
-        <div>最近更新时间：2022-03-15</div>
-        <div>所有内容均为原创，转载请注明出处</div>
-      </div>
-    </footer>
+
     <rToast :showToastFlag="showToastFlag" :toastText="toastText" @closeToast="handleToastClose()" ref="toastRf">回到顶部
     </rToast>
   </div>
@@ -375,29 +377,6 @@ onUnmounted(() => {
     }
   }
 
-  footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    height: 12vh;
-    // background-color: #2c2c2c;
-    background: linear-gradient(45deg,
-        rgba(255, 240, 240),
-        rgba(255, 255, 220),
-        rgba(240, 255, 240),
-        rgba(240, 255, 255),
-        rgb(240, 255, 241));
-    // color: azure;
-    line-height: 3vh;
 
-    .space {
-      width: 3vw;
-    }
-
-    .text {
-      bottom: 0;
-      margin-top: 2vh;
-    }
-  }
 }
 </style>

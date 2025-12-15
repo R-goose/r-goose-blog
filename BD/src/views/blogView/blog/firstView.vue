@@ -185,6 +185,19 @@ onUnmounted(() => {
       <game></game>
       <div></div>
     </div>
+    <footer>
+      <div>
+        <div class="flex flex-colums flex-center">
+          <div class="text">© 2025 R-Goose</div>
+          <div class="space"></div>
+          <div class="text">设计师：R-Goose</div>
+          <div class="space"></div>
+          <div class="text">创建：vue3.x</div>
+        </div>
+        <div>最近更新时间：2022-03-15</div>
+        <div>所有内容均为原创，转载请注明出处</div>
+      </div>
+    </footer>
   </div>
 </template>
 <style scoped lang="scss">
@@ -424,6 +437,30 @@ onUnmounted(() => {
   text-shadow: #ffd7c2 0px 0px 10px;
   animation: float 1s linear infinite;
   text-decoration: none;
+}
+
+footer {
+  position: absolute;
+  bottom: 0vh;
+  width: 100%;
+  height: 12vh;
+  background: linear-gradient(45deg,
+      rgba(255, 240, 240),
+      rgba(255, 255, 220),
+      rgba(240, 255, 240),
+      rgba(240, 255, 255),
+      rgb(240, 255, 241));
+  line-height: 3vh;
+  z-index: 10;
+
+  .space {
+    width: 3vw;
+  }
+
+  .text {
+    bottom: 0;
+    margin-top: 2vh;
+  }
 }
 
 @keyframes float {
