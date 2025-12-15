@@ -210,12 +210,13 @@ onUnmounted(() => {
   width: 100vw;
   // min-height: 100vh;
   height: 100%;
-  background: linear-gradient(45deg,
-      rgba(255, 240, 240, 0.6),
-      rgba(255, 255, 220, 0.6),
-      rgba(240, 255, 240, 0.6),
-      rgba(240, 255, 255, 0.6),
-      rgba(250, 240, 255, 0.6));
+  // background: linear-gradient(45deg,
+  //     rgba(255, 240, 240, 0.6),
+  //     rgba(255, 255, 220, 0.6),
+  //     rgba(240, 255, 240, 0.6),
+  //     rgba(240, 255, 255, 0.6),
+  //     rgba(250, 240, 255, 0.6));
+  background: linear-gradient(135deg, #f7fef9 0%, #eef6ff 100%);
   overflow: visible;
   // position: static;
 
@@ -232,6 +233,12 @@ onUnmounted(() => {
     gap: 0.3vw;
     border-bottom: #e4fff6 1px solid;
     z-index: 20;
+    background: linear-gradient(45deg,
+        rgba(255, 240, 240, 0.6),
+        rgba(255, 255, 220, 0.6),
+        rgba(240, 255, 240, 0.6),
+        rgba(240, 255, 255, 0.6),
+        rgba(250, 240, 255, 0.6));
     // -webkit-text-stroke: 1px #ffffff;
 
     span {
