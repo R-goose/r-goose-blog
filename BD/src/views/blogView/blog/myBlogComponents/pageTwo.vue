@@ -13,7 +13,7 @@
   // background-color: #ac4c4c;
   position: relative;
   left: 3vw;
-  top: 1vh;
+  top: 6vh;
   height: 89vh;
   width: 98vw;
   overflow: hidden;

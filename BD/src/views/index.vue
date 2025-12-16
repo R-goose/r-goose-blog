@@ -112,6 +112,8 @@ const navList = reactive([
   },
 ])
 
+const isShowAll = ref(false)
+
 const guideRef = ref(null)
 // 页面切换
 const changePage = (curremPageIndex) => {
@@ -176,19 +178,29 @@ onUnmounted(() => {
 
 <template>
   <div class="main text-center" ref="aTop">
-    <header class="flex flex-row">
-      <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
-        :class="{ active: item.isActive, show: !item.meta.public }" ref="guideRef">{{ item.name }}</span>
-      <div class="other">
-        <div>
-          <img src="@/image/icons/avatar.png" alt="" class="icon" draggable="false">
-        </div>
-        <div @click="logout()">
-          <img src="@/image/icons/logout.png" alt="" class="icon" draggable="false">
-        </div>
-      </div>
+    <header class="header-container" @mouseover="isShowAll = true" @mouseleave="isShowAll = false"
+      :style="{ width: isShowAll ? '100vw' : '12vw', borderRadius: isShowAll ? '0px' : '10vw' }">
       <div class="title">
+        <span v-show="!isShowAll">&lsaquo;&nbsp;..</span>
         R-Goose's Blog
+        <span v-show="!isShowAll">..&nbsp;&rsaquo;</span>
+      </div>
+      <div class="expandable-content" :class="{ expanded: isShowAll }">
+        <nav class="nav-left">
+          <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
+            :class="{ active: item.isActive, hidden: !item.meta.public }">
+            {{ item.name }}
+          </span>
+        </nav>
+
+        <div class="other-right">
+          <div class="avatar">
+            <img src="@/image/icons/avatar.png" alt="Avatar" draggable="false" />
+          </div>
+          <div @click="logout()" class="logout">
+            <img src="@/image/icons/logout.png" alt="Logout" draggable="false" />
+          </div>
+        </div>
       </div>
     </header>
     <main>
@@ -210,126 +222,129 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .main {
   width: 100vw;
-  // min-height: 100vh;
   height: 100%;
-  // background: linear-gradient(45deg,
-  //     rgba(255, 240, 240, 0.6),
-  //     rgba(255, 255, 220, 0.6),
-  //     rgba(240, 255, 240, 0.6),
-  //     rgba(240, 255, 255, 0.6),
-  //     rgba(250, 240, 255, 0.6));
   background: linear-gradient(135deg, #f7fef9 0%, #eef6ff 100%);
   overflow: visible;
-  // position: static;
 
   header {
-    position: sticky;
-    top: 0;
-    justify-content: left;
+    position: fixed;
+    top: 0.2vh;
+    height: 4.5vh;
+    width: 20vw;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 5vh;
-    font-size: 1rem;
-    color: #9e9e9e;
-    font-weight: 300;
-    gap: 0.3vw;
-    border-bottom: #e4fff6 1px solid;
+    border: 0.1vw solid #caf0ca;
+    border-top: none;
     z-index: 20;
-    background: linear-gradient(45deg,
-        rgba(255, 240, 240, 0.6),
-        rgba(255, 255, 220, 0.6),
-        rgba(240, 255, 240, 0.6),
-        rgba(240, 255, 255, 0.6),
-        rgba(250, 240, 255, 0.6));
-    // -webkit-text-stroke: 1px #ffffff;
-
-    span {
-      position: relative;
-      width: auto;
-      cursor: pointer;
-      padding: 0.3vh 0.4vw;
-      transition: all 0.3s ease;
-      z-index: 21;
-      margin-left: 0.5vw;
-
-      &:hover {
-        border-color: #d5fffb;
-        color: #89bb39;
-        scale: 1.1;
-      }
-
-      &:active {
-        scale: 0.9;
-      }
-
-      &.active {
-        border-color: #85be2762;
-        scale: 1.1;
-        font-weight: 500;
-        cursor: default;
-        color: #4a7702;
-      }
-
-      &.show {
-        display: none;
-      }
-
-
-      border: 2px solid;
-      border-radius: 10px;
-      border-color: #e4fff6;
-    }
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
 
     .title {
-      position: absolute;
-      text-align: center;
-      width: 100vw;
+      font-size: 1.1rem;
+      font-weight: 100;
       background: linear-gradient(to right, #89bb39, #7da2d1);
       background-clip: text;
       color: transparent;
-      // -webkit-text-stroke: 0.5px #89bb39;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      z-index: 51;
     }
 
-    .other {
-      position: absolute;
-      right: 0;
+    .expandable-content {
+      position: fixed;
+      inset: 0;
       display: flex;
-      flex-direction: row;
-      gap: 0.3vw;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1.5rem;
+      opacity: 0;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition:
+        transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 0.35s ease;
+      pointer-events: none;
+      border-radius: inherit;
+      background: rgba(255, 255, 255, 0.9);
+      // width: 100vw;
+
+      &.expanded {
+        opacity: 1;
+        transform: scaleX(1);
+        pointer-events: auto;
+      }
+
+      .nav-left {
+        display: flex;
+        gap: 1rem;
+        margin-left: 0.5vw;
 
 
+        span {
+          padding: 0.4vh 0.8vw;
+          border: 2px solid #d8ffda;
+          border-radius: 0.5vw;
+          cursor: pointer;
+          color: #7a7a7a;
+          font-weight: 500;
+          font-size: 0.95rem;
+          white-space: nowrap;
+          transition: all 0.25s ease-in-out;
+          // margin-left: 1vw;
 
-      &>:nth-child(1) {
-        border-radius: 50%;
-        width: 2vw;
-        height: 2vw;
-        color: #fff;
-        font-size: 1.2rem;
-        box-shadow: #dddddd 0px 0px 10px 0px;
+          &:hover:not(.active) {
+            border-color: #c0e8c2;
+            color: #7da239;
+            transform: translateY(-1px) scale(1.03);
+          }
 
-        .icon {
-          width: 1.5vw;
-          margin-top: 0.5vh;
-          transition: all 0.3s ease-in-out;
+          &.active {
+            border-color: #85be2762;
+            color: #4a7702;
+            font-weight: 600;
+            transform: translateY(-1px) scale(1.03);
+            cursor: default;
+          }
+
+          &.hidden {
+            display: none;
+          }
         }
       }
 
-      &>:nth-child(2) {
-        margin-right: 0.5vw;
-        // box-shadow: #4a7702 0px 0px 10px 0px;
-        width: 2vw;
-        height: 2vw;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
+      .other-right {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-right: 1vw;
 
-        .icon {
-          width: 1vw;
-          margin-top: 1vh;
-          transition: all 0.3s ease-in-out;
+        .avatar,
+        .logout {
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          transition: transform 0.25s ease;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          &:hover {
+            transform: scale(1.15);
+          }
         }
 
-        &:hover {
-          scale: 1.1;
+        .avatar {
+          border-radius: 50%;
+          overflow: hidden;
+          box-shadow: 0 0 6px rgba(200, 255, 200, 0.6);
         }
       }
     }

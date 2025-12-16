@@ -52,7 +52,7 @@ const day = ref(365)
 .myBlog1 {
   position: relative;
   left: 1vw;
-  top: 1vh;
+  top: 6vh;
   height: 89vh;
   width: 98vw;
   display: flex;

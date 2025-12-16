@@ -43,7 +43,7 @@ const changePage = (index) => {
 <style scoped lang="scss">
 .myBlog {
   position: relative;
-  height: 94.9vh;
+  height: 100vh;
   width: 200vw;
   overflow: hidden;
   display: flex;

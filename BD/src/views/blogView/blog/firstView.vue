@@ -4,8 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import InteractiveDecorations from '@/components/InteractiveDecorations.vue'
 import overView from './firstViewComponents/overView.vue'
 import game from './firstViewComponents/game.vue'
-import tenical from './firstViewComponents/tenical.vue'
-import introduce from './firstViewComponents/introduce.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -204,6 +202,7 @@ onUnmounted(() => {
 .firstView {
   height: auto;
   overflow: hidden;
+  margin-top: 5vh;
 
   >div:not(:first-child) {
     position: relative;
