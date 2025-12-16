@@ -17,21 +17,12 @@ const initClock = () => {
     if (hour.value > 12) {
       hour.value -= 12
     }
-    console.log('hour', hour.value);
-
     minute.value = time.value.getMinutes()
     second.value = time.value.getSeconds()
-    secondDegree.value = second.value * 6
-
-
-    minuteDegree.value = minute.value * 60 * 0.1
-    hourDegree.value = 30 * hour.value + 0.5 * minute.value + 0.1 * second.value
-
-    console.log('minute.value', minute.value, minuteDegree.value);
+    secondDegree.value = second.value * 6 + 180
+    minuteDegree.value = minute.value * 60 * 0.1 + 180
+    hourDegree.value = hour.value * 30 + (minute.value / 60) * 30 + 180
   }, 1000)
-
-
-
 }
 
 
@@ -58,6 +49,10 @@ onUnmounted(() => {
         <div class="clock-scale">
           <div class="hour-scale" v-for="index in 12" :key="index"
             :style="{ transform: `rotate(${30 * index}deg) translateY(8vh)` }">
+            <span class="inner-number"
+              :style="{ transform: `translate(-50%, -100%) rotate(${180 - 30 * index}deg) ` }">{{
+                index
+              }}</span>
           </div>
           <div class="minute-scale" v-for="index in 60" :key="index"
             :style="{ transform: `rotate(${6 * index}deg) translateY(8.5vh)` }">
@@ -167,6 +162,7 @@ onUnmounted(() => {
       border-radius: 50%;
       z-index: 5;
       overflow: hidden;
+      transform: rotate(180deg);
 
       .hour-scale,
       .minute-scale {
@@ -176,6 +172,12 @@ onUnmounted(() => {
         border-radius: 50vw;
         background-color: #929292;
         transform-origin: top;
+
+        .inner-number {
+          position: absolute;
+          color: #424242;
+          font-size: 1rem;
+        }
       }
 
       .hour-scale {

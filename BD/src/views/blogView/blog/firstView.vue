@@ -164,7 +164,7 @@ onUnmounted(() => {
         <div class="yellow"></div>
         <div class="blue"></div>
         <InteractiveDecorations></InteractiveDecorations>
-        <div class="pos-a flex flex-center full-w mt87 flex-column">
+        <div class="pos-a flex flex-center full-w mt90 flex-column">
           <h2 class="fs1rem">往下看</h2>
           <a class="fs2rem down" href="#top">☝🏻</a>
         </div>
@@ -200,9 +200,14 @@ onUnmounted(() => {
 </template>
 <style scoped lang="scss">
 .firstView {
-  height: auto;
+  height: 300vh;
   overflow: hidden;
-  margin-top: 5vh;
+
+  // margin-top: 5vh;
+  >div:first-child {
+    position: relative;
+    height: 100vh;
+  }
 
   >div:not(:first-child) {
     position: relative;
@@ -211,7 +216,9 @@ onUnmounted(() => {
   }
 
   &>div:last-child {
-    height: 83vh;
+    height: 95vh;
+    margin-top: 5vh;
+
   }
 }
 
