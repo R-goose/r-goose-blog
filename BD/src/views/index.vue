@@ -113,6 +113,13 @@ const navList = reactive([
 ])
 
 const isShowAll = ref(false)
+const mouseLeaveTimer = ref(null)
+const mouseLeaveHandler = () => {
+  clearTimeout(mouseLeaveTimer.value)
+  mouseLeaveTimer.value = setTimeout(() => {
+    isShowAll.value = false
+  }, 1000)
+}
 
 const guideRef = ref(null)
 // 页面切换
@@ -178,7 +185,7 @@ onUnmounted(() => {
 
 <template>
   <div class="main text-center" ref="aTop">
-    <header class="header-container" @mouseover="isShowAll = true" @mouseleave="isShowAll = false"
+    <header class="header-container" @mouseover="isShowAll = true" @mouseleave="mouseLeaveHandler()"
       :style="{ width: isShowAll ? '100vw' : '12vw', borderRadius: isShowAll ? '0px' : '10vw' }">
       <div class="title">
         <span v-show="!isShowAll">&lsaquo;&nbsp;..</span>
@@ -204,7 +211,7 @@ onUnmounted(() => {
       </div>
     </header>
     <main>
-      <themeChanger></themeChanger>
+      <!-- <themeChanger></themeChanger> -->
       <!-- <component :is="navList[curremComponentIndex].component"></component> -->
       <router-view></router-view>
     </main>
@@ -228,7 +235,7 @@ onUnmounted(() => {
 
   header {
     position: fixed;
-    top: 0.2vh;
+    top: 0vh;
     height: 4.5vh;
     width: 20vw;
     left: 50%;
@@ -239,7 +246,7 @@ onUnmounted(() => {
     border: 0.1vw solid #caf0ca;
     border-top: none;
     z-index: 20;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.377);
     backdrop-filter: blur(8px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
@@ -270,8 +277,7 @@ onUnmounted(() => {
         opacity 0.35s ease;
       pointer-events: none;
       border-radius: inherit;
-      background: rgba(255, 255, 255, 0.9);
-      // width: 100vw;
+      background: rgba(255, 255, 255, 0.158);
 
       &.expanded {
         opacity: 1;
@@ -287,27 +293,26 @@ onUnmounted(() => {
 
         span {
           padding: 0.4vh 0.8vw;
-          border: 2px solid #d8ffda;
+          border: 2px solid #bef06e62;
           border-radius: 0.5vw;
           cursor: pointer;
           color: #7a7a7a;
-          font-weight: 500;
+          font-weight: 100;
           font-size: 0.95rem;
           white-space: nowrap;
           transition: all 0.25s ease-in-out;
-          // margin-left: 1vw;
 
           &:hover:not(.active) {
-            border-color: #c0e8c2;
-            color: #7da239;
+            border-color: #c3ebc5;
+            color: #a0eb96;
             transform: translateY(-1px) scale(1.03);
           }
 
           &.active {
-            border-color: #85be2762;
-            color: #4a7702;
-            font-weight: 600;
-            transform: translateY(-1px) scale(1.03);
+            border-color: #bfffc2;
+            color: #86ec79;
+            // font-weight: 600;
+            transform: translateY(-1px) scale(1.1);
             cursor: default;
           }
 
@@ -391,7 +396,5 @@ onUnmounted(() => {
       scale: 0.9;
     }
   }
-
-
 }
 </style>

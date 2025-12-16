@@ -1,7 +1,10 @@
-<script setup></script>
+<script setup>
+
+
+</script>
 <template>
   <!-- 两页178vh -->
-  <div style="" class="myBlog2">
+  <div class="myBlog2">
     <!-- <h1>blog Page666</h1> -->
 
     <div>文章内容区</div>

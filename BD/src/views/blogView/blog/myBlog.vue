@@ -10,15 +10,15 @@ const translateX = computed(() => {
 })
 const changePage = (index) => {
   currentPage.value = index
-  translateX.value = index * 10
 }
 
 </script>
 
 <template>
+  <div class="background-layer"></div>
   <div class="myBlog" :style="{ transform: `translateX(${translateX}vw)` }">
-    <pageOne />
-    <pageTwo />
+    <pageOne></pageOne>
+    <pageTwo></pageTwo>
   </div>
 
   <footer>
@@ -41,14 +41,45 @@ const changePage = (index) => {
 </template>
 
 <style scoped lang="scss">
+.background-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('/src/image/pictures/背景.png') repeat;
+  background-position: 0 0, 100vw 0;
+  background-size: cover;
+  z-index: 0;
+}
+
 .myBlog {
   position: relative;
-  height: 100vh;
   width: 200vw;
-  overflow: hidden;
+  height: 100vh;
   display: flex;
-  flex-direction: row;
   transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+  z-index: 1;
+}
+
+.myBlog::before,
+.myBlog::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  background: inherit;
+  background-position: center center;
+  background-size: cover;
+}
+
+.myBlog::before {
+  left: 0;
+}
+
+.myBlog::after {
+  right: 0;
 }
 
 .pagePoints {
@@ -71,8 +102,10 @@ footer {
   gap: 1rem;
   padding: 0.15vw 0.5vw;
   border-radius: 0.65vw;
-  box-shadow: #b8d97c77 0px 0.3vh 1vh 1px;
+  box-shadow: #b8d97c 0px 0.3vh 1vh 1px;
   transition: all 0.3s ease-in-out;
+  background-color: #ffffff;
+  z-index: 3;
 
   &:hover {
     transition: all 0.3s ease-in-out;
