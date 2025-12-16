@@ -19,10 +19,10 @@ const initClock = () => {
     }
     minute.value = time.value.getMinutes()
     second.value = time.value.getSeconds()
-    secondDegree.value = second.value * 6 + 180
+    secondDegree.value = (second.value * 6 / 10 + 180)
     minuteDegree.value = minute.value * 60 * 0.1 + 180
     hourDegree.value = hour.value * 30 + (minute.value / 60) * 30 + 180
-  }, 1000)
+  }, 10)
 }
 
 
@@ -48,20 +48,19 @@ onUnmounted(() => {
         </div>
         <div class="clock-scale">
           <div class="hour-scale" v-for="index in 12" :key="index"
-            :style="{ transform: `rotate(${30 * index}deg) translateY(8vh)` }">
+            :style="{ transform: `rotate(${30 * index}deg) translateY(8.2vh)` }">
             <span class="inner-number"
               :style="{ transform: `translate(-50%, -100%) rotate(${180 - 30 * index}deg) ` }">{{
                 index
               }}</span>
           </div>
-          <div class="minute-scale" v-for="index in 60" :key="index"
-            :style="{ transform: `rotate(${6 * index}deg) translateY(8.5vh)` }">
-          </div>
+          <!-- <div class="minute-scale" v-for="index in 60" :key="index"
+            :style="{ transform: `rotate(${6 * index}deg) translateY(8.5vh)` }"></div> -->
         </div>
       </div>
     </div>
-    <div class="right"></div>
   </div>
+  <div class="right"></div>
 </template>
 <style scoped lang="scss">
 .clock {
@@ -114,13 +113,15 @@ onUnmounted(() => {
         left: 50%;
         transform-origin: top center;
         border-radius: 50vw;
+        // transition: all 1s ease-out;
+
       }
 
       .clock-second-hand {
         width: 0.2vh;
         height: 7vh;
         background-color: #ff3b30;
-        animation: scaleMove 60s linear infinite;
+        // animation: scaleMove 60s linear infinite;
         z-index: 3;
       }
 
@@ -168,10 +169,10 @@ onUnmounted(() => {
       .minute-scale {
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: 49%;
         border-radius: 50vw;
         background-color: #929292;
-        transform-origin: top;
+        transform-origin: top center;
 
         .inner-number {
           position: absolute;
@@ -183,7 +184,6 @@ onUnmounted(() => {
       .hour-scale {
         width: 0.38vh;
         height: 10vh;
-        transform: translateX(10vh);
       }
 
       .minute-scale {
