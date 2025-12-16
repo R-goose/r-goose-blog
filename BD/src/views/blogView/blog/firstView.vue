@@ -175,12 +175,12 @@ onUnmounted(() => {
     <div ref="totalPage">
       <overView></overView>
     </div>
-    <div ref="">
+    <!-- <div ref="">
       <introduce></introduce>
     </div>
     <div ref="">
       <tenical></tenical>
-    </div>
+    </div> -->
     <div ref="">
       <game></game>
       <div></div>
