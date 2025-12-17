@@ -266,7 +266,7 @@ onUnmounted(() => {
 }
 
 .isActived {
-  width: 5vw;
+  width: 4vw;
   height: 0.5vh;
   background-color: #69dcc0;
   border-radius: 0.2vw;
