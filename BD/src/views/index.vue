@@ -40,7 +40,6 @@ const updateHeights = () => {
   // 视口高度
   viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
   pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
-  console.log('pageTotalHeight：', pageTotalHeight.value);
 }
 
 // toast相关
@@ -122,6 +121,7 @@ const mouseLeaveHandler = () => {
 }
 
 const guideRef = ref(null)
+const lastPageIndex = ref(0)
 // 页面切换
 const changePage = (curremPageIndex) => {
   navList.forEach((item, index) => {
@@ -132,6 +132,8 @@ const changePage = (curremPageIndex) => {
       isFirstPage.value = false
     }
   })
+  lastPageIndex.value = curremPageIndex
+  localStorage.setItem('lastPageIndex', lastPageIndex.value)
   curremComponentIndex.value = curremPageIndex;
   router.push({ name: navList[curremPageIndex].routeName })
   aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' });
@@ -148,7 +150,6 @@ const closeButton = (e) => {
   e.preventDefault();
   showToastFlag.value = true
   toastText.value = '是否要关闭该按钮？'
-  console.log('guideRef.value', guideRef.value);
   guideRef.value.forEach(el => {
     if (el) {
       el.style.cursor = 'default';
@@ -170,11 +171,12 @@ watch(() => route.name, (newName) => {
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights);
-  curremComponentIndex.value = 0
+  curremComponentIndex.value = localStorage.getItem('lastPageIndex') ? parseInt(localStorage.getItem('lastPageIndex')) : 0
+  navList.forEach((item, index) => {
+    item.isActive = index === curremComponentIndex.value;
+  })
   router.push({ name: navList[curremComponentIndex.value].routeName })
   isFirstPage.value = router.currentRoute.value.name === 'firstView'
-  console.log('isFirstPage.value', isFirstPage.value);
-
 })
 
 onUnmounted(() => {

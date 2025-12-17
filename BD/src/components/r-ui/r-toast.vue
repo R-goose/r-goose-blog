@@ -34,7 +34,6 @@ const closeToast = () => {
 onMounted(async () => {
   await nextTick()
   if (!toastRef.value) {
-    console.log('toastRef 元素未找到');
     return;
   }
   document.documentElement.style.overflow = 'hidden'

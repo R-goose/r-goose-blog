@@ -51,8 +51,6 @@ const updateHeights = async () => {
     scroll: mainPageEl.scrollHeight,
     client: mainPageEl.clientHeight,
   }
-
-  console.log("整个页面的高度", mainPageHeight);
 }
 
 const totalPage = ref(null)

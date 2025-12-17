@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import clock from './clock.vue'
+import clock from './pageOneComponents/clock.vue'
+import statisticalData from './pageOneComponents/statisticalData.vue'
 import avatarImg from '/src/image/avatar/1myAvatar.png'
 const articleCount = ref(120)
 const readCount = ref(3456)
@@ -34,19 +35,21 @@ const day = ref(365)
           <span>代办<span>{{ waitCount }}</span></span>
         </div>
       </div>
-      <div class="music">音乐播放器</div>
+      <div class="music">工具箱</div>
     </div>
     <div class="rightContainer">
       <div class="right-top">
-        <div>便签</div>
         <div>
+          <statisticalData></statisticalData>
+        </div>
+        <div class="inner-component">
           <clock></clock>
         </div>
       </div>
       <div class="right-bottom">
         <div>待办事项</div>
         <div>热门文章</div>
-        <div>数据统计图表</div>
+        <div>便签</div>
       </div>
     </div>
   </div>
@@ -70,7 +73,7 @@ const day = ref(365)
   position: relative;
   width: $width;
   height: $height;
-  background-color: #ffffff60;
+  background-color: #ffffffd7;
 
   &::before {
     content: '';
@@ -208,7 +211,7 @@ const day = ref(365)
 .right-top>div,
 .right-bottom>div {
   flex: 1;
-  padding: 0.5vh 0.5vw;
+  padding: 0.2vw 0.2vw;
   @include flexible-box(auto, 100%);
   display: flex;
   justify-content: center;
