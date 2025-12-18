@@ -5,7 +5,7 @@ const displayTime = ref({
   hours: 0,
   minutes: 0,
   seconds: 0,
-  milliseconds: 0
+  milliseconds: 0,
 })
 
 const startTime = ref(0)
@@ -25,7 +25,7 @@ const updateDisplay = (totalMs) => {
     hours: pad(hours),
     minutes: pad(minutes),
     seconds: pad(seconds),
-    milliseconds: padMs(milliseconds)
+    milliseconds: padMs(milliseconds),
   }
 }
 
@@ -78,6 +78,15 @@ const timeTypeChange = () => {
   nextUseTypeIndex.value = swapper
 }
 
+const useRecord = ref([
+  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
+  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
+  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
+  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
+  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
+  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
+])
+
 onMounted(() => {
   nowUseTypeIndex.value = 0
   updateDisplay(0)
@@ -88,15 +97,9 @@ onMounted(() => {
   <div class="timer">
     <div v-show="nowUseTypeIndex == 0">
       <div class="timer-text">
-        <span class="num">
-          {{ displayTime.hours }} :
-        </span>
-        <span class="num">
-          {{ displayTime.minutes }} :
-        </span>
-        <span class="num">
-          {{ displayTime.seconds }} :
-        </span>
+        <span class="num"> {{ displayTime.hours }} : </span>
+        <span class="num"> {{ displayTime.minutes }} : </span>
+        <span class="num"> {{ displayTime.seconds }} : </span>
         <span class="num">
           {{ displayTime.milliseconds }}
         </span>
@@ -108,11 +111,35 @@ onMounted(() => {
       </div>
     </div>
 
+    <div v-show="nowUseTypeIndex == 1">
+      <div class="timer-text">
+        <span class="num"> {{ displayTime.hours }} : </span>
+        <span class="num"> {{ displayTime.minutes }} : </span>
+        <span class="num"> {{ displayTime.seconds }} : </span>
+      </div>
+      <div class="button-area">
+        <span class="button start" @click="startTimer" v-if="!isPaused">开始</span>
+        <span class="button pause" @click="pauseTimer" v-else>暂停</span>
+        <span class="button stop" @click="stopTimer">停止</span>
+      </div>
+    </div>
+
     <div class="list">
       <div class="title">使用记录</div>
+      <div class="list-container">
+        <div class="list-item" v-for="(item, index) in useRecord" :key="index">
+          <span>{{ index + 1 }}.</span>
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-value">{{ item.value }}</span>
+          <span class="item-used-time">{{ item.usedTime }}</span>
+          <span class="delete-btn">x</span>
+        </div>
+      </div>
     </div>
     <div class="now-use">正在使用{{ timeType[nowUseTypeIndex].name }}</div>
-    <div class="change" @click="timeTypeChange(nowUseTypeIndex)">切换为{{ timeType[nextUseTypeIndex].name }}</div>
+    <div class="change" @click="timeTypeChange(nowUseTypeIndex)">
+      切换为{{ timeType[nextUseTypeIndex].name }}
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
@@ -181,7 +208,7 @@ onMounted(() => {
     text-align: start;
     font-size: 0.8rem;
     top: 1vh;
-    left: 1vw;
+    left: 1%;
     width: 8vw;
     height: 3vh;
     line-height: 3vh;
@@ -192,12 +219,101 @@ onMounted(() => {
     text-align: end;
     font-size: 0.8rem;
     top: 1vh;
-    right: 1vw;
+    right: 1%;
     width: auto;
     height: 3vh;
     line-height: 3vh;
     cursor: pointer;
     color: #12c8ff;
+  }
+
+  .list {
+    position: relative;
+    width: 98%;
+    height: 20vh;
+    // border: #e3ffe0 groove 0.2vw;
+    border-radius: 0.3vw;
+    margin-top: 1vh;
+
+    .title {
+      position: relative;
+      font-size: 1.4rem;
+      height: 3vh;
+      line-height: 3vh;
+      text-align: start;
+      color: #6ae639;
+    }
+
+    .list-container {
+      position: relative;
+      width: 100%;
+      height: 17vh;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        width: 0.5vw;
+        background-color: transparent;
+        // display: none;
+
+        &-thumb {
+          background: linear-gradient(180deg, rgb(205, 255, 205), rgb(198, 253, 253));
+          border-radius: 10px;
+
+          &:active {
+            box-shadow: inset 0 0 6px rgb(104, 104, 104);
+          }
+        }
+      }
+
+      .list-item {
+        position: relative;
+        width: 97%;
+        height: 4vh;
+        display: flex;
+        // justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1vh;
+        background-color: #fff;
+        border-radius: 0.4vw;
+        padding-left: 0.5vw;
+        box-shadow: #dfdfdf 0.2vw 0.2vw 0.2vw;
+      }
+      .item-name {
+        font-size: 1rem;
+        height: 3vh;
+        line-height: 3vh;
+        width: 5vw;
+        text-align: start;
+        margin-left: 0.5vw;
+      }
+      .item-value {
+        font-size: 1rem;
+        text-align: end;
+        width: 8vw;
+        height: 3vh;
+        line-height: 3vh;
+        // background-color: #ffacac;
+      }
+      .item-used-time {
+        position: absolute;
+        right: 3vw;
+        font-size: 0.7rem;
+        height: 3vh;
+        line-height: 3vh;
+        // background-color: #ffacac;
+      }
+      .delete-btn {
+        position: absolute;
+        right: 1vw;
+        font-size: 1rem;
+        height: 4vh;
+        line-height: 4vh;
+        color: #ff8a8a;
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>
