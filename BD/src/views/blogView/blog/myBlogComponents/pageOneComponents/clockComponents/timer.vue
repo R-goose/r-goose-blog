@@ -125,7 +125,9 @@ onMounted(() => {
     </div>
 
     <div class="list">
-      <div class="title">使用记录</div>
+      <div class="title">
+        <span>使用记录</span>
+      </div>
       <div class="list-container">
         <div class="list-item" v-for="(item, index) in useRecord" :key="index">
           <span>{{ index + 1 }}.</span>
@@ -241,7 +243,9 @@ onMounted(() => {
       height: 3vh;
       line-height: 3vh;
       text-align: start;
-      color: #6ae639;
+      background: linear-gradient(-15deg, #8cffa5 0%, #67dac1 100%);
+      color: transparent;
+      background-clip: text;
     }
 
     .list-container {
@@ -255,10 +259,9 @@ onMounted(() => {
       &::-webkit-scrollbar {
         width: 0.5vw;
         background-color: transparent;
-        // display: none;
 
         &-thumb {
-          background: linear-gradient(180deg, rgb(205, 255, 205), rgb(198, 253, 253));
+          background: linear-gradient(-15deg, #8cffa5 0%, #67dac1 100%);
           border-radius: 10px;
 
           &:active {
@@ -270,7 +273,7 @@ onMounted(() => {
       .list-item {
         position: relative;
         width: 97%;
-        height: 4vh;
+        height: 235px;
         display: flex;
         // justify-content: space-between;
         align-items: center;
