@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { timeFormat } from '@/utils/functions'
 import timer from './clockComponents/timer.vue'
 import countdownDay from './clockComponents/countdownDay.vue'
 
@@ -23,30 +24,22 @@ const updateClock = () => {
   const totalMinutes = minutes + totalSeconds / 60
   const totalHours = hours + totalMinutes / 60
 
-  secondDegree.value = totalSeconds * 6 + 180   // 360° / 60s = 6°/s
-  minuteDegree.value = totalMinutes * 6 + 180   // 360° / 60m = 6°/min
-  hourDegree.value = totalHours * 30 + 180      // 360° / 12h = 30°/h
+  secondDegree.value = totalSeconds * 6 + 180 // 360° / 60s = 6°/s
+  minuteDegree.value = totalMinutes * 6 + 180 // 360° / 60m = 6°/min
+  hourDegree.value = totalHours * 30 + 180 // 360° / 12h = 30°/h
 
   rafId.value = requestAnimationFrame(updateClock)
 }
 
-const timeFormat = (time) => {
-  const years = String(time.getFullYear()).padStart(2, '0')
-  const months = String(time.getMonth() + 1).padStart(2, '0')
-  const days = String(time.getDate()).padStart(2, '0')
-  return `${years}年${months}月${days}日`
-}
-
 const functions = [
   { name: '计时器', component: timer },
-  { name: '倒数日', component: countdownDay }
+  { name: '倒数日', component: countdownDay },
 ]
 const currentFunction = ref(0)
 
-
 const changeFunction = (index) => {
   currentFunction.value = index
-  console.log('currentFunction', currentFunction.value);
+  console.log('currentFunction', currentFunction.value)
 }
 
 onMounted(() => {
@@ -74,35 +67,51 @@ onUnmounted(() => {
           <div class="clock-hour-hand" :style="{ transform: `rotate(${hourDegree}deg)` }"></div>
         </div>
         <div class="clock-scale">
-          <div class="hour-scale" v-for="index in 12" :key="index"
-            :style="{ transform: `rotate(${30 * index}deg) translateY(6.5vh)` }">
-            <span class="inner-number"
-              :style="{ transform: `translate(-50%, -100%) rotate(${180 - 30 * index}deg)translateX(0.3vh) ` }">{{
-                index
-              }}</span>
+          <div
+            class="hour-scale"
+            v-for="index in 12"
+            :key="index"
+            :style="{ transform: `rotate(${30 * index}deg) translateY(6.5vh)` }"
+          >
+            <span
+              class="inner-number"
+              :style="{
+                transform: `translate(-50%, -100%) rotate(${180 - 30 * index}deg)translateX(0.3vh) `,
+              }"
+              >{{ index }}</span
+            >
           </div>
-          <div class="minute-scale" v-for="index in 60" :key="index"
-            :style="{ transform: `rotate(${6 * index}deg) translateY(7.1vh)`, display: index % 5 !== 0 ? 'block' : 'none' }">
-          </div>
+          <div
+            class="minute-scale"
+            v-for="index in 60"
+            :key="index"
+            :style="{
+              transform: `rotate(${6 * index}deg) translateY(7.1vh)`,
+              display: index % 5 !== 0 ? 'block' : 'none',
+            }"
+          ></div>
         </div>
       </div>
     </div>
     <div class="right">
       <div class="function-changer">
-        <div class="function-item" v-for="(item, index) in functions" :key="index" @click="changeFunction(index)">
+        <div
+          class="function-item"
+          v-for="(item, index) in functions"
+          :key="index"
+          @click="changeFunction(index)"
+        >
           {{ item.name }}
-          <span :class="{ isActived: currentFunction === index }">
-          </span>
+          <span :class="{ isActived: currentFunction === index }"> </span>
         </div>
       </div>
       <div class="function-content">
         <keep-alive>
-          <component :is=functions[currentFunction].component></component>
+          <component :is="functions[currentFunction].component"></component>
         </keep-alive>
       </div>
     </div>
   </div>
-
 </template>
 <style scoped lang="scss">
 .clock {
@@ -260,8 +269,6 @@ onUnmounted(() => {
       position: relative;
       height: 100%;
     }
-
-
   }
 }
 

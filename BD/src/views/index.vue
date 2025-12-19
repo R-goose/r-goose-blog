@@ -1,16 +1,15 @@
 <script setup>
 import { ref, onMounted, onUnmounted, reactive, markRaw, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
-import firstView from './blogView/blog/firstView.vue';
+import { useRoute, useRouter } from 'vue-router'
+import firstView from './blogView/blog/firstView.vue'
 import myBlog from '@/views/blogView/blog/myBlog.vue'
 import dataView from '@/views/oaView/indexPage.vue'
 import dataScreen from '@/views/screenView/indexPage.vue'
 import rToast from '@/components/r-ui/r-toast.vue'
 import themeChanger from '@/components/themeChanger.vue'
 
-
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 const isFirstPage = ref(false)
 const pageHeight = ref(0)
 const viewportHeight = ref(0)
@@ -18,15 +17,15 @@ const mainPageRef = ref(null)
 const pageTotalHeight = ref(0)
 
 const updateHeights = () => {
-  const mainPageEl = mainPageRef.value?.$el;
-  if (!mainPageEl) return;
+  const mainPageEl = mainPageRef.value?.$el
+  if (!mainPageEl) return
 
   // 子组件高度
   const mainPageHeight = {
     offset: mainPageEl.offsetHeight,
     scroll: mainPageEl.scrollHeight,
-    client: mainPageEl.clientHeight
-  };
+    client: mainPageEl.clientHeight,
+  }
 
   // 整个页面的高度
   pageHeight.value = Math.max(
@@ -34,12 +33,12 @@ const updateHeights = () => {
     document.body.offsetHeight,
     document.documentElement.clientHeight,
     document.documentElement.scrollHeight,
-    document.documentElement.offsetHeight
-  );
+    document.documentElement.offsetHeight,
+  )
 
   // 视口高度
-  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight;
-  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset;
+  viewportHeight.value = window.innerHeight || document.documentElement.clientHeight
+  pageTotalHeight.value = pageHeight.value + mainPageHeight.offset
 }
 
 // toast相关
@@ -80,34 +79,37 @@ const navList = reactive([
     name: '首页',
     isActive: true,
     routeName: 'firstView',
-    component: markRaw(firstView),// 使用markRaw防止组件被响应式处理
+    component: markRaw(firstView), // 使用markRaw防止组件被响应式处理
     meta: {
       public: true,
-    }
-  }, {
+    },
+  },
+  {
     name: '我的博客',
     isActive: false,
     routeName: 'myBlog',
     component: markRaw(myBlog),
     meta: {
       public: true,
-    }
-  }, {
+    },
+  },
+  {
     name: '数据后台',
     isActive: false,
     routeName: 'DataAdmin',
     component: markRaw(dataView),
     meta: {
       public: true,
-    }
-  }, {
+    },
+  },
+  {
     name: '数据大屏',
     isActive: false,
     routeName: 'DataScreen',
     component: markRaw(dataScreen),
     meta: {
       public: true,
-    }
+    },
   },
 ])
 
@@ -125,7 +127,7 @@ const lastPageIndex = ref(0)
 // 页面切换
 const changePage = (curremPageIndex) => {
   navList.forEach((item, index) => {
-    item.isActive = index === curremPageIndex;
+    item.isActive = index === curremPageIndex
     if (item.name === '首页') {
       isFirstPage.value = true
     } else {
@@ -134,28 +136,28 @@ const changePage = (curremPageIndex) => {
   })
   lastPageIndex.value = curremPageIndex
   localStorage.setItem('lastPageIndex', lastPageIndex.value)
-  curremComponentIndex.value = curremPageIndex;
+  curremComponentIndex.value = curremPageIndex
   router.push({ name: navList[curremPageIndex].routeName })
-  aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' });
+  aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' })
 }
 
 // 回到顶部
 const toTop = () => {
-  aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' });
+  aTop.value.scrollIntoView({ behavior: 'auto', block: 'start' })
 }
 
 // 隐藏按钮
 const hideToTopButton = ref(false)
 const closeButton = (e) => {
-  e.preventDefault();
+  e.preventDefault()
   showToastFlag.value = true
   toastText.value = '是否要关闭该按钮？'
-  guideRef.value.forEach(el => {
+  guideRef.value.forEach((el) => {
     if (el) {
-      el.style.cursor = 'default';
+      el.style.cursor = 'default'
       el.hover = 'default'
     }
-  });
+  })
 
   disableScroll()
 }
@@ -164,31 +166,39 @@ const logout = () => {
   router.push({ name: 'login' })
 }
 
-watch(() => route.name, (newName) => {
-  isFirstPage.value = newName === 'firstView'
-})
+watch(
+  () => route.name,
+  (newName) => {
+    isFirstPage.value = newName === 'firstView'
+  },
+)
 
 onMounted(() => {
   updateHeights()
-  window.addEventListener('resize', updateHeights);
-  curremComponentIndex.value = localStorage.getItem('lastPageIndex') ? parseInt(localStorage.getItem('lastPageIndex')) : 0
+  window.addEventListener('resize', updateHeights)
+  curremComponentIndex.value = localStorage.getItem('lastPageIndex')
+    ? parseInt(localStorage.getItem('lastPageIndex'))
+    : 0
   navList.forEach((item, index) => {
-    item.isActive = index === curremComponentIndex.value;
+    item.isActive = index === curremComponentIndex.value
   })
   router.push({ name: navList[curremComponentIndex.value].routeName })
   isFirstPage.value = router.currentRoute.value.name === 'firstView'
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateHeights);
+  window.removeEventListener('resize', updateHeights)
 })
-
 </script>
 
 <template>
   <div class="main text-center" ref="aTop">
-    <header class="header-container" @mouseover="isShowAll = true" @mouseleave="mouseLeaveHandler()"
-      :style="{ width: isShowAll ? '100vw' : '12vw', borderRadius: isShowAll ? '0px' : '10vw' }">
+    <header
+      class="header-container"
+      @mouseover="isShowAll = true"
+      @mouseleave="mouseLeaveHandler()"
+      :style="{ width: isShowAll ? '100vw' : '12vw', borderRadius: isShowAll ? '0px' : '10vw' }"
+    >
       <div class="title">
         <span v-show="!isShowAll">&lsaquo;&nbsp;..</span>
         R-Goose's Blog
@@ -196,8 +206,12 @@ onUnmounted(() => {
       </div>
       <div class="expandable-content" :class="{ expanded: isShowAll }">
         <nav class="nav-left">
-          <span v-for="(item, index) in navList" :key="index" @click="changePage(index)"
-            :class="{ active: item.isActive, hidden: !item.meta.public }">
+          <span
+            v-for="(item, index) in navList"
+            :key="index"
+            @click="changePage(index)"
+            :class="{ active: item.isActive, hidden: !item.meta.public }"
+          >
             {{ item.name }}
           </span>
         </nav>
@@ -221,10 +235,16 @@ onUnmounted(() => {
       <div>去到底部</div>
     </aside> -->
     <aside class="right" @click="toTop()" @contextmenu="closeButton($event)" v-if="isFirstPage">
-      <img src="/src/image/icons/toTop.png" alt="" draggable="false">
+      <img src="/src/image/icons/toTop.png" alt="" draggable="false" />
     </aside>
 
-    <rToast :showToastFlag="showToastFlag" :toastText="toastText" @closeToast="handleToastClose()" ref="toastRf">回到顶部
+    <rToast
+      v-if="showToastFlag"
+      :showToastFlag="showToastFlag"
+      :toastText="toastText"
+      @closeToast="handleToastClose()"
+      ref="toastRf"
+      >回到顶部
     </rToast>
   </div>
 </template>
@@ -291,7 +311,6 @@ onUnmounted(() => {
         display: flex;
         gap: 1rem;
         margin-left: 0.5vw;
-
 
         span {
           padding: 0.4vh 0.8vw;
