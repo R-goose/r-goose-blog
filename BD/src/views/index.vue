@@ -314,14 +314,16 @@ onUnmounted(() => {
 
         span {
           padding: 0.4vh 0.8vw;
-          border: 2px solid #bef06e62;
+          border: 0.1vw solid #ceffd9;
           border-radius: 0.5vw;
           cursor: pointer;
-          color: #7a7a7a;
+          color: #79ecb3;
           font-weight: 100;
           font-size: 0.95rem;
           white-space: nowrap;
           transition: all 0.25s ease-in-out;
+          // background-color: #ffffff8f;
+          // background: linear-gradient(to right, #92ffaa90 0%, #e4fff184 100%);
 
           &:hover:not(.active) {
             border-color: #c3ebc5;
@@ -330,10 +332,13 @@ onUnmounted(() => {
           }
 
           &.active {
-            border-color: #bfffc2;
-            color: #86ec79;
+            // border-color: #ffffff;
+            border: none;
+            color: #008463;
             // font-weight: 600;
+            font-size: 1.2rem;
             transform: translateY(-1px) scale(1.1);
+            text-shadow: #61c00f81 0 0.1vw 0.2vw;
             cursor: default;
           }
 

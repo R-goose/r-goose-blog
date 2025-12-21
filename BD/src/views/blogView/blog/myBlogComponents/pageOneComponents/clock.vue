@@ -143,7 +143,7 @@ onUnmounted(() => {
     text-align: start;
     margin-bottom: 1vh;
     line-height: 3vh;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: #ffffff;
   }
 

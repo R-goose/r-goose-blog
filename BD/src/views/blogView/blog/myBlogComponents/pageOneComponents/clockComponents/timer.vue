@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { timeFormat } from '@/utils/functions'
 import rToast from '@/components/r-ui/r-toast.vue'
+import rTips from '@/components/r-ui/r-tips.vue'
 
 const displayTime = ref({
   hours: 0,
@@ -423,6 +424,16 @@ const sortRecord = (type) => {
   }
 }
 
+//tips
+const alertVisible = ref(false)
+const contentTitle = '提示'
+const contentText = '倒计时器暂时无法使用，请稍后再试'
+
+const showAlert = () => {
+  alertVisible.value = true
+  console.log('alertVisible.value', alertVisible.value)
+}
+
 watch(presetTimeSecond, (newVal) => {
   if (newVal < 0) {
     presetTimeSecond.value = 0
@@ -519,9 +530,9 @@ onMounted(() => {
 
     <div class="list">
       <div class="title">
-        <span>使用记录</span>
-        <span class="sort-btn" @click="sortRecord(0)">按功能排序</span>
-        <span class="sort-btn" @click="sortRecord(1)">按使用时间排序</span>
+        <span @click="showAlert()">使用记录</span>
+        <span class="sort-btn" @click="sortRecord(0)">功能排序</span>
+        <span class="sort-btn" @click="sortRecord(1)">使用时间排序</span>
       </div>
       <div class="operation-row">
         <span>序号</span>
@@ -661,6 +672,14 @@ onMounted(() => {
         </div>
       </template>
     </r-toast>
+    <r-tips
+      v-if="alertVisible"
+      :alertVisible="alertVisible"
+      :title="contentTitle"
+      :content="contentText"
+    >
+      666</r-tips
+    >
   </div>
 </template>
 <style scoped lang="scss">
@@ -809,21 +828,18 @@ onMounted(() => {
       background-clip: text;
 
       .sort-btn {
-        position: absolute;
-        right: 3%;
+        position: relative;
+        // top: 0.5vh;
         height: 2vh;
-        top: 0.5vh;
         line-height: 2vh;
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         font-weight: 100;
         margin-left: 1vw;
         cursor: pointer;
         background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
         color: transparent;
         background-clip: text;
-        // border: #67dac1 solid 0.1vw;
-        border-radius: 0.3vw;
-        padding: 0 0.4vw;
+        // padding: 0 0.3vw;
         transition: all 0.2s ease-in-out;
 
         &:hover {
@@ -834,14 +850,6 @@ onMounted(() => {
         &:active {
           scale: 0.95;
           transition: all 0.2s ease-in-out;
-        }
-
-        &:last-child {
-          cursor: pointer;
-          margin-right: 20%;
-          background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
-          color: transparent;
-          background-clip: text;
         }
       }
     }
