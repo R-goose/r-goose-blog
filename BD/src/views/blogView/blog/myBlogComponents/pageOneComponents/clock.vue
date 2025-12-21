@@ -262,6 +262,10 @@ onUnmounted(() => {
         line-height: 3vh;
         font-size: 1rem;
         cursor: pointer;
+        background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
+        color: transparent;
+        font-weight: 100;
+        background-clip: text;
       }
     }
 
@@ -273,9 +277,10 @@ onUnmounted(() => {
 }
 
 .isActived {
-  width: 4vw;
+  width: 3vw;
   height: 0.5vh;
-  background-color: #69dcc0;
+  // background-color: #69dcc0;
+  background: linear-gradient(15deg, #29bbaf 0%, #67dac1 100%);
   border-radius: 0.2vw;
   position: absolute;
   top: 100%;

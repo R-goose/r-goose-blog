@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { timeFormat } from '@/utils/functions'
+import rToast from '@/components/r-ui/r-toast.vue'
 
 const displayTime = ref({
   hours: 0,
@@ -166,15 +167,168 @@ const timeType = ref([
 
 //倒计时器
 const presetTime = ref([
-  { name: '10分钟', value: 600000 },
-  { name: '1小时', value: 3600000 },
-  { name: '自定义', value: 1 },
+  { name: '10分', value: 600000 },
+  { name: '1时', value: 3600000 },
 ])
 
+//自定义
+const customTimeFlag = ref(false)
+// 自定义倒计时输入值
+const customHours = ref(0)
+const customMinutes = ref(0)
+const customSeconds = ref(0)
+//预设的值
+const presetTimeSecond = ref(0)
+const presetTimeMinute = ref(0)
+const presetTimeHour = ref(0)
+//选择自定义的时间
+const isUseCustomTime = ref(false)
+const selectPresetTimeItem = ref(0)
+const toastTitle = '自定义倒计时'
+const lastSelectCountdownTime = ref({})
+
 const selectPresetTime = (value) => {
-  selectCountdownTime.value = value
-  selectCountdownTimeShow.value = value
-  formatCountdownTime(selectCountdownTimeShow.value)
+  if (value == 0) {
+    showToastFlag.value = true
+    customTimeFlag.value = true
+    return
+  } else {
+    customTimeFlag.value = false
+    isUseCustomTime.value = false
+    selectCountdownTime.value = value
+    selectCountdownTimeShow.value = value
+    formatCountdownTime(selectCountdownTimeShow.value)
+  }
+}
+
+const showToastFlag = ref(false)
+
+const setCustomTime = (type, value) => {
+  if (type == 'hours') {
+    customHours.value += value
+    limitInput(customHours.value, 'hours')
+  }
+  if (type == 'minutes') {
+    customMinutes.value += value
+    limitInput(customMinutes.value, 'minutes')
+  }
+  if (type == 'seconds') {
+    customSeconds.value += value
+    limitInput(customSeconds.value, 'seconds')
+  }
+}
+
+const setSelectPresetTime = (item) => {
+  presetTimeSecond.value = 0
+  presetTimeMinute.value = 0
+  presetTimeHour.value = 0
+
+  selectPresetTimeItem.value = item.value
+  presetTimeHour.value = Math.floor(selectPresetTimeItem.value / 60 / 60 / 1000)
+  presetTimeMinute.value =
+    Math.floor(selectPresetTimeItem.value / 60 / 1000) - presetTimeHour.value * 60
+  presetTimeSecond.value =
+    selectPresetTimeItem.value / 1000 - presetTimeMinute.value * 60 - presetTimeHour.value * 3600
+  if (presetTimeHour.value < 1) {
+    presetTimeHour.value = 0
+    presetTimeMinute.value = Math.floor(selectPresetTimeItem.value / 60 / 1000)
+    if (presetTimeMinute.value < 1) {
+      presetTimeMinute.value = 0
+      presetTimeSecond.value = Math.floor(selectPresetTimeItem.value / 1000)
+    } else {
+      presetTimeSecond.value = 0
+    }
+    // presetTimeSecond.value = Math.floor(selectPresetTimeItem.value / 1000)
+  }
+  formatCountdownTime(selectPresetTimeItem.value)
+}
+
+const useLastTime = () => {
+  customHours.value = lastSelectCountdownTime.value.hours || 0
+  customMinutes.value = lastSelectCountdownTime.value.minutes || 0
+  customSeconds.value = lastSelectCountdownTime.value.seconds || 0
+}
+
+const limitInput = (val, type) => {
+  if (val < 0) {
+    if (type === 'hours') customHours.value = 0
+    if (type === 'minutes') customMinutes.value = 0
+    if (type === 'seconds') customSeconds.value = 0
+  }
+  if (type !== 'hours' && val > 59) {
+    if (type === 'minutes') customMinutes.value = 59
+    if (type === 'seconds') customSeconds.value = 59
+  }
+  if (type == 'hours' && val > 23) {
+    customHours.value = 23
+  }
+}
+
+const cancel = () => {
+  showToastFlag.value = false
+  customTimeFlag.value = false
+  isUseCustomTime.value = false
+  selectCountdownTime.value = 0
+  customSeconds.value = 0
+  customMinutes.value = 0
+  customHours.value = 0
+  selectPresetTimeItem.value = 0
+  formatCountdownTime(0)
+}
+
+const confirm = () => {
+  const totalMs =
+    (parseInt(customHours.value) || 0) * 3600000 +
+    (parseInt(customMinutes.value) || 0) * 60000 +
+    (parseInt(customSeconds.value) || 0) * 1000
+
+  selectCountdownTime.value = totalMs
+  formatCountdownTime(totalMs)
+  lastSelectCountdownTime.value.seconds = customSeconds.value
+  lastSelectCountdownTime.value.minutes = customMinutes.value
+  lastSelectCountdownTime.value.hours = customHours.value
+
+  if (
+    lastSelectCountdownTime.value.seconds == 0 &&
+    lastSelectCountdownTime.value.minutes == 0 &&
+    lastSelectCountdownTime.value.hours == 0
+  ) {
+    isUseCustomTime.value = false
+  } else {
+    isUseCustomTime.value = true
+  }
+
+  showToastFlag.value = false
+
+  customHours.value = 0
+  customMinutes.value = 0
+
+  presetTime.value.forEach((item) => {
+    if (item.value == selectPresetTimeItem.value) {
+      let newName = ''
+      if (presetTimeHour.value != 0) {
+        newName = presetTimeHour.value + '时'
+      }
+      if (presetTimeMinute.value != 0) {
+        newName += presetTimeMinute.value + '分'
+      }
+      if (presetTimeSecond.value != 0) {
+        newName += presetTimeSecond.value + '秒'
+      }
+      item.name = newName
+      item.value =
+        presetTimeSecond.value * 1000 +
+        presetTimeMinute.value * 60000 +
+        presetTimeHour.value * 3600000
+      // formatCountdownTime(item.value)
+      if (selectPresetTimeItem.value == 0) {
+        customTimeFlag.value = false
+      }
+    }
+  })
+
+  customSeconds.value = 0
+  selectPresetTimeItem.value = 0
 }
 
 const nowUseTypeIndex = ref(0)
@@ -269,6 +423,31 @@ const sortRecord = (type) => {
   }
 }
 
+watch(presetTimeSecond, (newVal) => {
+  if (newVal < 0) {
+    presetTimeSecond.value = 0
+  }
+  if (newVal > 59) {
+    presetTimeSecond.value = 59
+  }
+})
+watch(presetTimeMinute, (newVal) => {
+  if (newVal < 0) {
+    presetTimeMinute.value = 0
+  }
+  if (newVal > 59) {
+    presetTimeMinute.value = 59
+  }
+})
+watch(presetTimeHour, (newVal) => {
+  if (newVal < 0) {
+    presetTimeHour.value = 0
+  }
+  if (newVal > 23) {
+    presetTimeHour.value = 23
+  }
+})
+
 onMounted(() => {
   nowUseTypeIndex.value = 0
   updateDisplay(0)
@@ -296,35 +475,43 @@ onMounted(() => {
           class="button stop"
           @click="stopTimer(0)"
           :style="{ cursor: !isRunning ? 'not-allowed' : 'pointer' }"
+          v-if="isRunning"
           >停止</span
         >
       </div>
     </div>
 
-    <div v-show="nowUseTypeIndex == 1">
+    <div v-show="nowUseTypeIndex == 1" style="width: 100%">
       <div class="timer-text">
         <span class="num">{{ selectCountdownTimeShow.hours }} :</span>
         <span class="num">{{ selectCountdownTimeShow.minutes }} :</span>
         <span class="num">{{ selectCountdownTimeShow.seconds }} </span>
       </div>
       <div class="button-area">
-        <span v-if="!isPaused" class="countdown-time">
+        <span v-if="!isCountdownPaused" class="countdown-time">
           <span
             class="button"
             @click="selectPresetTime(item.value)"
-            :class="{ isActive: selectCountdownTime == item.value }"
+            :class="{ isActive: selectCountdownTime == item.value && customTimeFlag == false }"
             v-for="(item, index) in presetTime"
             :key="index"
           >
             {{ item.name }}
           </span>
+          <span
+            class="button"
+            @click="selectPresetTime(0)"
+            :class="{ isActive: isUseCustomTime == true }"
+            >自定义</span
+          >
         </span>
-        <span class="button start" @click="startTimer(1)" v-if="!isPaused">开始</span>
+        <span class="button start" @click="startTimer(1)" v-if="!isCountdownPaused">开始</span>
         <span class="button pause" @click="pauseTimer(1)" v-else>暂停</span>
         <span
           class="button stop"
           @click="stopTimer(1)"
           :style="{ cursor: !isCountdownRunning ? 'not-allowed' : 'pointer' }"
+          v-if="isCountdownRunning"
           >停止</span
         >
       </div>
@@ -354,10 +541,126 @@ onMounted(() => {
         <div v-if="useRecord.length == 0" class="empty">暂无数据</div>
       </div>
     </div>
-    <div class="now-use">正在使用{{ timeType[nowUseTypeIndex].name }}</div>
+    <div class="now-use">{{ timeType[nowUseTypeIndex].name }}</div>
     <div class="change" @click="timeTypeChange(nowUseTypeIndex)">
       切换为{{ timeType[nextUseTypeIndex].name }}
     </div>
+    <r-toast
+      v-if="showToastFlag"
+      @cancel="cancel"
+      @confirm="confirm"
+      :showToastFlag="showToastFlag"
+      :toastTitle="toastTitle"
+    >
+      <template #default>
+        <div class="toast-content">
+          <div class="time-input-group">
+            <div class="input-item">
+              <div></div>
+              <span class="input-change" @click="setCustomTime('hours', 1)">+</span>
+              <input
+                type="number"
+                min="0"
+                max="23"
+                v-model.number="customHours"
+                @input="limitInput(customHours, 'hours')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="setCustomTime('hours', -1)">-</span>
+              <span>时</span>
+            </div>
+            <div class="input-item">
+              <span class="input-change" @click="setCustomTime('minutes', 1)">+</span>
+              <input
+                type="number"
+                min="0"
+                max="59"
+                v-model.number="customMinutes"
+                @input="limitInput(customMinutes, 'minutes')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="setCustomTime('minutes', -1)">-</span>
+              <span>分</span>
+            </div>
+            <div class="input-item">
+              <span class="input-change" @click="setCustomTime('seconds', 1)">+</span>
+              <input
+                type="number"
+                min="0"
+                max="59"
+                v-model.number="customSeconds"
+                @input="limitInput(customSeconds, 'seconds')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="setCustomTime('seconds', -1)">-</span>
+              <span>秒</span>
+            </div>
+          </div>
+          <div class="lastTime">
+            上次自定义的倒计时:
+            {{ lastSelectCountdownTime.hours || 0 }}时 {{ lastSelectCountdownTime.minutes || 0 }}分
+            {{ lastSelectCountdownTime.seconds || 0 }}秒
+            <span class="use-lasttime-btn" @click="useLastTime()">使用</span>
+          </div>
+          <div class="preset-section">
+            <span class="section-title">设置预设时间：</span>
+            <div class="preset-buttons">
+              <span
+                class="preset-button"
+                @click="setSelectPresetTime(item)"
+                :class="{ isActive: selectPresetTimeItem == item.value }"
+                v-for="(item, index) in presetTime"
+                :key="index"
+              >
+                {{ item.name }}
+              </span>
+            </div>
+          </div>
+          <div class="time-input-group" v-if="selectPresetTimeItem !== 0">
+            <div class="input-item">
+              <div></div>
+              <span class="input-change" @click="presetTimeHour++">+</span>
+              <input
+                type="number"
+                min="0"
+                max="23"
+                v-model.number="presetTimeHour"
+                @input="limitInput(presetTimeHour, 'hours')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="presetTimeHour--">-</span>
+              <span>时</span>
+            </div>
+            <div class="input-item">
+              <span class="input-change" @click="presetTimeMinute++">+</span>
+              <input
+                type="number"
+                min="0"
+                max="59"
+                v-model.number="presetTimeMinute"
+                @input="limitInput(presetTimeMinute, 'minutes')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="presetTimeMinute--">-</span>
+              <span>分</span>
+            </div>
+            <div class="input-item">
+              <span class="input-change" @click="presetTimeSecond++">+</span>
+              <input
+                type="number"
+                min="0"
+                max="59"
+                v-model.number="presetTimeSecond"
+                @input="limitInput(presetTimeSecond, 'seconds')"
+                placeholder="设置时间"
+              />
+              <span class="input-change" @click="presetTimeSecond--">-</span>
+              <span>秒</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </r-toast>
   </div>
 </template>
 <style scoped lang="scss">
@@ -370,7 +673,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // justify-content: center;
+  color: #69dcc0;
 
   .timer-text {
     position: relative;
@@ -380,7 +683,6 @@ onMounted(() => {
     font-size: 2vw;
     font-size: 4rem;
     display: flex;
-    // background-color: #bdbdbd;
     justify-content: center;
 
     .num {
@@ -389,12 +691,13 @@ onMounted(() => {
       height: 100%;
       width: 6vw;
       margin-top: 1vh;
-      // background-color: #fff;
+      text-shadow: 0 0.1vw 0.2vw rgba(255, 255, 255, 0.5);
     }
   }
 
   .button-area {
     position: relative;
+    // background-color: #fff;
     bottom: 1vh;
     display: flex;
     justify-content: space-around;
@@ -402,7 +705,10 @@ onMounted(() => {
     font-weight: 100;
 
     .button {
-      width: 3.5vw;
+      position: relative;
+      min-width: 3.5vw;
+      width: auto;
+      padding: 0 0.2vw;
       height: 3vh;
       line-height: 3vh;
       border: #ffffff solid 0.1vh;
@@ -455,30 +761,20 @@ onMounted(() => {
           transition: all 0.2s ease-in-out;
         }
       }
-
-      .isActive {
-        background-color: #ffe396;
-        scale: 1.05;
-        font-size: 0.9rem;
-        color: #ffffff;
-        cursor: default;
-
-        &:hover {
-          scale: 1.05;
-        }
-      }
     }
   }
 
   .now-use {
     position: absolute;
     text-align: start;
-    font-size: 0.8rem;
+    font-size: 1rem;
     top: 1vh;
-    left: 1%;
+    left: 3%;
     width: 8vw;
     height: 3vh;
     line-height: 3vh;
+    font-weight: 100;
+    text-shadow: 0 0.1vw 0.2vw #ffffff80;
   }
 
   .change {
@@ -486,12 +782,15 @@ onMounted(() => {
     text-align: end;
     font-size: 0.8rem;
     top: 1vh;
-    right: 1%;
+    right: 3%;
     width: auto;
     height: 3vh;
     line-height: 3vh;
     cursor: pointer;
-    color: #12c8ff;
+    background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
+    color: transparent;
+    font-weight: 100;
+    background-clip: text;
   }
 
   .list {
@@ -522,7 +821,7 @@ onMounted(() => {
         background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
         color: transparent;
         background-clip: text;
-        border: #67dac1 solid 0.1vw;
+        // border: #67dac1 solid 0.1vw;
         border-radius: 0.3vw;
         padding: 0 0.4vw;
         transition: all 0.2s ease-in-out;
@@ -564,24 +863,22 @@ onMounted(() => {
         height: 100%;
         white-space: nowrap;
         line-height: 2vh;
-        text-align: center;
         padding-left: 0.3vw;
         text-align: start;
         font-weight: 100;
 
         &:first-child {
-          width: 1.5vw;
+          width: 2.5vw;
         }
 
         &:nth-child(2) {
-          width: 4.7vw;
-          margin-left: 1vw;
+          width: 4.5vw;
         }
         &:nth-child(3) {
-          margin-right: 6.5vw;
+          width: 8.6vw;
         }
         &:nth-child(4) {
-          margin-right: 3.7vw;
+          width: 5.6vw;
         }
         &:last-child {
           color: #ff6d6d;
@@ -625,29 +922,31 @@ onMounted(() => {
         // justify-content: center;
         align-items: center;
         margin-bottom: 1vh;
-        background-color: #f7feff;
+        background-color: #f7feffb0;
         border-radius: 0.4vw;
-        box-shadow: #dfdfdf 0.2vw 0.2vw 0.2vw;
+        box-shadow: #74e687b7 1px 1px 0.1vw;
+        // border: #74e6b8 solid 0.1vw;
         padding: 0.4vw 0;
         padding-left: 0.5vw;
         font-weight: 100;
 
         span {
           &:first-child {
+            font-size: 0.8rem;
             width: 1.5vw;
             text-align: start;
           }
         }
       }
       .item-name {
-        font-size: 1rem;
+        font-size: 0.8rem;
         height: 100%;
         width: 5vw;
         text-align: start;
         margin-left: 1vw;
       }
       .item-value {
-        font-size: 1rem;
+        font-size: 0.8rem;
         text-align: start;
         width: 6vw;
         white-space: nowrap;
@@ -684,6 +983,168 @@ onMounted(() => {
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+    }
+  }
+}
+
+.isActive {
+  background-color: #ffe396 !important;
+  scale: 1.05 !important;
+  font-size: 0.9rem !important;
+  color: #ffffff !important;
+  cursor: default !important;
+  border: #ffffff solid 0.1vh !important;
+
+  &:hover {
+    scale: 1.05;
+  }
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vw;
+  padding: 1.5vw 1vw;
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .lastTime {
+    font-size: 1rem;
+    color: #7bcfc8;
+    margin-bottom: 0.5vw;
+    letter-spacing: 0.1rem;
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;
+
+    .use-lasttime-btn {
+      font-weight: 100;
+      width: 3vw;
+      margin-left: 1vw;
+      text-align: center;
+      border: 1px solid #8fe5cf;
+      border-radius: 0.4vw;
+      color: #ffffff;
+      cursor: pointer;
+      background-color: #8fe5cf;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #73eecb;
+        transition: all 0.2s ease-in-out;
+        transform: translateY(-0.2vh);
+      }
+    }
+  }
+
+  .time-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
+
+    .input-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: #7bcfc8;
+      gap: 0.3vw;
+
+      input {
+        width: 2.5vw;
+        height: 2.2vh;
+        font-size: 1.3rem;
+        text-align: center;
+        border: 1px solid #67dac184;
+        border-radius: 0.4vw;
+        background: #ffffff00;
+        outline: none;
+        padding: 0.2vw;
+
+        &::placeholder {
+          color: #a3dfd0;
+          font-size: 0.9rem;
+        }
+
+        &:focus {
+          border-color: #8cffa5;
+          box-shadow: 0 0 0.3vw rgba(103, 218, 193, 0.6);
+        }
+      }
+
+      span {
+        font-size: 1.3rem;
+        font-weight: 500;
+      }
+
+      .input-change {
+        user-select: none;
+        font-size: 1.5rem;
+        font-weight: 100;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 1vw;
+        height: 1vw;
+        line-height: 1vw;
+        text-align: center;
+        border-radius: 0.2vw;
+        color: #ffffff;
+        background-color: #8fe5cf;
+
+        &:hover {
+          scale: 1.1;
+          transition: all 0.2s ease-in-out;
+        }
+
+        &:active {
+          scale: 0.95;
+          transition: all 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+
+  .preset-section {
+    display: flex;
+    flex-direction: row;
+    // align-items: center;
+    gap: 0.6vw;
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.5vw;
+      letter-spacing: 0.3rem;
+      color: #7bcfc8;
+    }
+
+    .preset-buttons {
+      display: flex;
+      flex-direction: row;
+      // align-items: center;
+      // justify-content: center;
+      gap: 0.8vw;
+
+      .preset-button {
+        width: 5vw;
+        height: 3vh;
+        text-align: center;
+        line-height: 3vh;
+        font-size: 0.8rem;
+        border: 1px solid #67dac1;
+        border-radius: 0.4vw;
+        color: #67dac1;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
       }
     }
   }

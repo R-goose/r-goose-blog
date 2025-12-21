@@ -1,35 +1,46 @@
 <script setup>
-console.log('【子组件创建】', Date.now())
 import { ref, onMounted, nextTick, onUnmounted } from 'vue'
 
 const firstIn = ref(false)
 const firstOut = ref(false)
-const toastContentRef = ref(null) // 新增 ref
+const toastContentRef = ref(null)
 
 const props = defineProps({
   showToastFlag: {
     type: Boolean,
     default: false,
   },
-  toastText: {
+  toastTitle: {
     type: String,
-    default: '这是弹窗',
+    default: '提示',
   },
 })
 
-const emit = defineEmits(['closeToast'])
+const emit = defineEmits(['cancel', 'confirm'])
 
-const closeToast = () => {
+const cancel = () => {
   if (firstOut.value) return
   firstOut.value = true
   firstIn.value = false
 
   const onAnimationEnd = () => {
     toastContentRef.value?.removeEventListener('animationend', onAnimationEnd)
-    emit('closeToast')
+    emit('cancel')
     firstOut.value = false
   }
 
+  toastContentRef.value?.addEventListener('animationend', onAnimationEnd)
+}
+
+const confirm = () => {
+  if (firstOut.value) return
+  firstOut.value = true
+  firstIn.value = false
+  const onAnimationEnd = () => {
+    toastContentRef.value?.removeEventListener('animationend', onAnimationEnd)
+    firstOut.value = false
+    emit('confirm')
+  }
   toastContentRef.value?.addEventListener('animationend', onAnimationEnd)
 }
 
@@ -49,24 +60,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="r-toast" v-if="showToastFlag" @click.self="closeToast">
-    <div
-      ref="toastContentRef"
-      class="toast-content"
-      :class="{ 'first-in': firstIn, 'first-out': firstOut }"
-    >
-      <div class="toast-header">
-        <h1>{{ toastText }}</h1>
-      </div>
-      <div class="toast-body">
-        <slot></slot>
-      </div>
-      <div class="toast-footer">
-        <button class="close-btn" @click="closeToast">确定</button>
-        <button class="close-btn" @click="closeToast">关闭</button>
+  <Teleport to="body">
+    <div class="r-toast" v-if="showToastFlag" @click.self="cancel">
+      <div
+        ref="toastContentRef"
+        class="toast-content"
+        :class="{ 'first-in': firstIn, 'first-out': firstOut }"
+      >
+        <div class="toast-header">
+          <h1>{{ toastTitle }}</h1>
+        </div>
+        <div class="toast-body">
+          <slot></slot>
+        </div>
+        <div class="toast-footer">
+          <button class="btn-confirm" @click="confirm">确定</button>
+          <button class="btn-cancel" @click="cancel">取消</button>
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">
@@ -76,92 +89,129 @@ onUnmounted(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  z-index: 9998;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: '钉钉进步体 Regular';
 
   .toast-content {
     position: relative;
-    margin-bottom: 15vh;
-    width: 45vw;
-    height: 45.5vh;
-    background: linear-gradient(to bottom, #bbffe4, #a0f0d0);
-    // background-color: #a0f0d0;
-    border-radius: 1.4vw 1.4vw 0.4vw 0.4vw;
+    margin-bottom: 10vh;
+    width: 30vw;
+    height: auto;
+    background: linear-gradient(-15deg, #8cffa5 0%, #67dac1 100%);
+    border-radius: 1.4vw;
     box-shadow:
-      0 10px 30px rgba(0, 200, 150, 0.3),
-      0 0 0 1px #a0f0d0;
+      0 10px 30px rgba(103, 218, 193, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.3),
+      inset 0 0 12px rgba(255, 255, 255, 0.2);
     overflow: hidden;
-    transform: translateY(100%);
+    transform: translateY(100%) scale(0.9);
     opacity: 0;
     transition: none;
 
     &.first-in {
-      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     &.first-out {
-      animation: popOut 0.5s cubic-bezier(0.55, 0.055, 0.175, 0.19) forwards;
+      animation: popOut 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
     }
 
     .toast-header {
-      background-color: #bbffe4;
-      width: 100%;
-      height: 5.5vh;
+      height: 6vh;
+      line-height: 6vh;
       text-align: center;
-      line-height: 5.5vh;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-bottom: 0.1vw solid rgba(255, 255, 255, 0.3);
 
       h1 {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #04c484;
-        letter-spacing: 0.2vw;
+        color: #1a5d57;
+        text-shadow: 0 0.1vw 0.2vw rgba(255, 255, 255, 0.734);
       }
     }
 
     .toast-body {
       position: relative;
-      color: #444;
+      color: #1c4b45;
       font-size: 1rem;
-      width: 43vw;
-      height: 36vh;
-      left: 1vw;
-      background-color: #ffffff;
-      border-radius: 0 0 0.6vw 0.6vw;
+      line-height: 1.6;
+      height: auto;
+      width: 30vw;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.678);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .toast-footer {
       display: flex;
+      height: 7vh;
       justify-content: center;
-      width: 100%;
-      height: 4vh;
-      gap: 2vw;
+      gap: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
 
-      .close-btn {
-        // background: linear-gradient(to right, #4caf99, #6eff75);
-        background-color: #4caf99;
-        color: white;
-        border: none;
-        border-radius: 1vw;
-        font-size: 1rem;
-        width: 8vw;
-        margin-top: 0.5vh;
-        height: 3vh;
+      button {
+        width: 6vw;
+        height: 4vh;
+        line-height: 4vh;
+        position: relative;
+        top: 1.5vh;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        border-radius: 14px;
+        color: #1a5d57;
+        font-size: 1.05rem;
+        font-weight: 600;
         cursor: pointer;
-        box-shadow: 0 4px 10px #61dfc3;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
+        // outline: none;
+        box-shadow: 0 2px 6px rgba(103, 218, 193, 0.2);
+        font-family: '钉钉进步体 Regular';
+        font-weight: 400;
+        src:
+          url('/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff2') format('woff2'),
+          url('/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff') format('woff');
+        font-variation-settings: normal;
+        font-display: swap;
 
         &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 14px rgba(76, 175, 80, 0.4);
+          // background: rgba(255, 255, 255, 0.5);
+          scale: 1.05;
+          transform: translateY(-3px);
+          box-shadow:
+            0 4px 12px rgba(103, 218, 193, 0.4),
+            0 0 8px rgba(139, 255, 165, 0.3);
         }
 
         &:active {
           transform: translateY(0);
+          background: #ffffff66;
+          box-shadow: 0 2px 6px rgba(103, 218, 193, 0.2);
         }
+      }
+
+      .btn-confirm {
+        border-color: #ffffffb3;
+        color: #2a6b63;
+        background-color: #caffd7;
+      }
+
+      .btn-cancel {
+        border-color: #ffffffb3;
+        color: #2a6b63;
+        background-color: #b5ffc8;
       }
     }
   }
@@ -169,22 +219,25 @@ onUnmounted(() => {
 
 @keyframes popIn {
   0% {
-    transform: translateY(100%);
+    transform: translateY(100%) scale(0.85);
     opacity: 0;
   }
+  70% {
+    transform: translateY(-8%) scale(1.02);
+  }
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
 @keyframes popOut {
   0% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
   100% {
-    transform: translateY(100%);
+    transform: translateY(100%) scale(0.9);
     opacity: 0;
   }
 }
