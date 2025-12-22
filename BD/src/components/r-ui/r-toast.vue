@@ -92,11 +92,12 @@ onUnmounted(() => {
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
-  z-index: 9999;
+  z-index: 9900;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: '钉钉进步体 Regular';
+  user-select: none;
 
   .toast-content {
     position: relative;
@@ -119,7 +120,7 @@ onUnmounted(() => {
     }
 
     &.first-out {
-      animation: popOut 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+      animation: popOut 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
     }
 
     .toast-header {

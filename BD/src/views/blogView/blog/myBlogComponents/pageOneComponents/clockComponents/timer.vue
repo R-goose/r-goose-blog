@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, nextTick } from 'vue'
 import { timeFormat } from '@/utils/functions'
 import rToast from '@/components/r-ui/r-toast.vue'
-import rTips from '@/components/r-ui/r-tips.vue'
+import { rTips } from '@/utils/rTips'
 
 const displayTime = ref({
   hours: 0,
@@ -62,9 +62,19 @@ const isCountdownRunning = ref(false)
 
 const startTimer = (index) => {
   if (index == 0) {
-    if (timerId) return
+    if (timerId) {
+      rTips({
+        type: 'alert-e',
+        title: '请先停止计时器',
+      })
+      return
+    }
     isRunning.value = true
     isPaused.value = true
+    rTips({
+      type: 'alert-s',
+      title: '开始计时',
+    })
     startTime.value = Date.now() - elapsedBeforePause.value
 
     timerId = setInterval(() => {
@@ -73,9 +83,19 @@ const startTimer = (index) => {
       updateDisplay(totalElapsed)
     }, 10)
   } else if (index == 1) {
-    if (countdownTimerId) return
+    if (countdownTimerId) {
+      rTips({
+        type: 'alert-e',
+        title: '请先停止倒计时器',
+      })
+      return
+    }
     isCountdownRunning.value = true
     isCountdownPaused.value = true
+    rTips({
+      type: 'alert-s',
+      title: '开始倒计时',
+    })
     selectCountdownPausedTime.value = selectCountdownTime.value
 
     countdownTimerId = setInterval(() => {
@@ -105,11 +125,19 @@ const pauseTimer = (index) => {
       isCountdownPaused.value = false
     }
   }
+  rTips({
+    type: 'alert-w',
+    title: '已暂停',
+  })
 }
 
 const stopTimer = (index) => {
   if (index == 0) {
     if (!isRunning.value) {
+      rTips({
+        type: 'alert-e',
+        title: '当前没有进行中的计时器',
+      })
       return
     }
     if (timerId) {
@@ -132,9 +160,17 @@ const stopTimer = (index) => {
         displayTime.value.milliseconds,
       usedTime: timeFormat(new Date()) + ' ' + new Date().toLocaleTimeString(),
     })
+    rTips({
+      type: 'alert-s',
+      title: '已结束',
+    })
     updateDisplay(0)
   } else if (index == 1) {
     if (!isCountdownRunning.value) {
+      rTips({
+        type: 'alert-e',
+        title: '当前没有进行中的倒计时器',
+      })
       return
     }
     if (countdownTimerId) {
@@ -157,6 +193,10 @@ const stopTimer = (index) => {
     })
     selectCountdownTime.value = 0
     countdownTimeSpent.value = 0
+    rTips({
+      type: 'alert-s',
+      title: '已结束',
+    })
     formatCountdownTime(0)
   }
 }
@@ -248,6 +288,17 @@ const useLastTime = () => {
   customHours.value = lastSelectCountdownTime.value.hours || 0
   customMinutes.value = lastSelectCountdownTime.value.minutes || 0
   customSeconds.value = lastSelectCountdownTime.value.seconds || 0
+  if (customHours.value == 0 && customMinutes.value == 0 && customSeconds.value == 0) {
+    rTips({
+      type: 'alert-w',
+      title: '请先设置倒计时时间',
+    })
+  } else {
+    rTips({
+      type: 'alert-s',
+      title: '已恢复上一次选择',
+    })
+  }
 }
 
 const limitInput = (val, type) => {
@@ -255,13 +306,25 @@ const limitInput = (val, type) => {
     if (type === 'hours') customHours.value = 0
     if (type === 'minutes') customMinutes.value = 0
     if (type === 'seconds') customSeconds.value = 0
+    rTips({
+      type: 'alert-e',
+      title: '时间不能小于0',
+    })
   }
   if (type !== 'hours' && val > 59) {
     if (type === 'minutes') customMinutes.value = 59
     if (type === 'seconds') customSeconds.value = 59
+    rTips({
+      type: 'alert-e',
+      title: '时间不能大于59',
+    })
   }
   if (type == 'hours' && val > 23) {
     customHours.value = 23
+    rTips({
+      type: 'alert-e',
+      title: '时间不能大于23',
+    })
   }
 }
 
@@ -277,7 +340,7 @@ const cancel = () => {
   formatCountdownTime(0)
 }
 
-const confirm = () => {
+const confirm = async () => {
   const totalMs =
     (parseInt(customHours.value) || 0) * 3600000 +
     (parseInt(customMinutes.value) || 0) * 60000 +
@@ -299,7 +362,10 @@ const confirm = () => {
     isUseCustomTime.value = true
   }
 
-  showToastFlag.value = false
+  await nextTick(() => {
+    rTips({ type: 'alert-s', title: '已保存' })
+    showToastFlag.value = false
+  })
 
   customHours.value = 0
   customMinutes.value = 0
@@ -369,9 +435,23 @@ const useRecord = ref([
   { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
 ])
 
-const deleteRecord = (index) => {
+const deleteRecord = async (index) => {
   if (index == -1) {
-    useRecord.value = []
+    const result = await rTips({
+      type: 'confirm',
+      title: '确认删除全部记录？',
+      content: '删除后不可恢复，请确认！',
+      confirmBtnText: '删了',
+      cancelBtnText: '手滑,不删了',
+    })
+    if (result == 'confirm') {
+      useRecord.value = []
+      rTips({
+        type: 'alert-s',
+        title: '已删除全部记录',
+      })
+      return
+    }
   }
   useRecord.value.splice(index, 1)
 }
@@ -422,16 +502,6 @@ const sortRecord = (type) => {
       reverseFlag.value.timeSort = true
     }
   }
-}
-
-//tips
-const alertVisible = ref(false)
-const contentTitle = '提示'
-const contentText = '倒计时器暂时无法使用，请稍后再试'
-
-const showAlert = () => {
-  alertVisible.value = true
-  console.log('alertVisible.value', alertVisible.value)
 }
 
 watch(presetTimeSecond, (newVal) => {
@@ -530,7 +600,7 @@ onMounted(() => {
 
     <div class="list">
       <div class="title">
-        <span @click="showAlert()">使用记录</span>
+        <span>使用记录</span>
         <span class="sort-btn" @click="sortRecord(0)">功能排序</span>
         <span class="sort-btn" @click="sortRecord(1)">使用时间排序</span>
       </div>
@@ -672,14 +742,6 @@ onMounted(() => {
         </div>
       </template>
     </r-toast>
-    <r-tips
-      v-if="alertVisible"
-      :alertVisible="alertVisible"
-      :title="contentTitle"
-      :content="contentText"
-    >
-      666</r-tips
-    >
   </div>
 </template>
 <style scoped lang="scss">
