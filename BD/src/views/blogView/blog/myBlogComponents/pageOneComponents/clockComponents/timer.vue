@@ -90,6 +90,13 @@ const startTimer = (index) => {
       })
       return
     }
+    if (selectCountdownTime.value == 0) {
+      rTips({
+        type: 'alert-e',
+        title: '请先设置倒计时时间',
+      })
+      return
+    }
     isCountdownRunning.value = true
     isCountdownPaused.value = true
     rTips({
@@ -436,6 +443,13 @@ const useRecord = ref([
 ])
 
 const deleteRecord = async (index) => {
+  if (useRecord.value.length == 0) {
+    rTips({
+      type: 'alert-w',
+      title: '暂无记录',
+    })
+    return
+  }
   if (index == -1) {
     const result = await rTips({
       type: 'confirm',
@@ -451,9 +465,28 @@ const deleteRecord = async (index) => {
         title: '已删除全部记录',
       })
       return
+    } else {
+      return
+    }
+  } else {
+    const result = await rTips({
+      type: 'confirm',
+      title: '确认删除这条记录？',
+      content: '删除后不可恢复，请确认！',
+      confirmBtnText: '删了',
+      cancelBtnText: '手滑,不删了',
+    })
+    if (result == 'confirm') {
+      useRecord.value.splice(index, 1)
+      rTips({
+        type: 'alert-s',
+        title: '已删除全部记录',
+      })
+      return
+    } else {
+      return
     }
   }
-  useRecord.value.splice(index, 1)
 }
 
 const reverseFlag = ref({
@@ -751,23 +784,19 @@ onMounted(() => {
   height: 100%;
   display: flex;
   border-radius: 0 0.3vw 0.3vw 0;
-  display: flex;
   flex-direction: column;
   align-items: center;
   color: #69dcc0;
 
   .timer-text {
-    position: relative;
     width: 100%;
     height: 13vh;
     line-height: 13vh;
-    font-size: 2vw;
     font-size: 4rem;
     display: flex;
     justify-content: center;
 
     .num {
-      position: relative;
       font-size: smaller;
       height: 100%;
       width: 6vw;
@@ -777,8 +806,6 @@ onMounted(() => {
   }
 
   .button-area {
-    position: relative;
-    // background-color: #fff;
     bottom: 1vh;
     display: flex;
     justify-content: space-around;
@@ -786,7 +813,6 @@ onMounted(() => {
     font-weight: 100;
 
     .button {
-      position: relative;
       min-width: 3.5vw;
       width: auto;
       padding: 0 0.2vw;
@@ -800,12 +826,10 @@ onMounted(() => {
 
       &:hover {
         scale: 1.05;
-        transition: all 0.2s ease-in-out;
       }
 
       &:active {
         scale: 0.95;
-        transition: all 0.2s ease-in-out;
       }
     }
 
@@ -839,7 +863,6 @@ onMounted(() => {
 
         &:hover {
           scale: 1.1;
-          transition: all 0.2s ease-in-out;
         }
       }
     }
@@ -864,7 +887,6 @@ onMounted(() => {
     font-size: 0.8rem;
     top: 1vh;
     right: 3%;
-    width: auto;
     height: 3vh;
     line-height: 3vh;
     cursor: pointer;
@@ -875,12 +897,10 @@ onMounted(() => {
   }
 
   .list {
-    position: relative;
     width: 98%;
     border-radius: 0.3vw;
 
     .title {
-      position: relative;
       font-size: 1.2rem;
       height: 3vh;
       line-height: 3vh;
@@ -890,8 +910,6 @@ onMounted(() => {
       background-clip: text;
 
       .sort-btn {
-        position: relative;
-        // top: 0.5vh;
         height: 2vh;
         line-height: 2vh;
         font-size: 0.75rem;
@@ -901,24 +919,20 @@ onMounted(() => {
         background: linear-gradient(15deg, #0e7e74 0%, #67dac1 100%);
         color: transparent;
         background-clip: text;
-        // padding: 0 0.3vw;
         transition: all 0.2s ease-in-out;
 
         &:hover {
           scale: 1.05;
-          transition: all 0.2s ease-in-out;
         }
 
         &:active {
           scale: 0.95;
-          transition: all 0.2s ease-in-out;
         }
       }
     }
 
     .operation-row {
-      position: relative;
-      width: 97%;
+      width: 24vw;
       height: 2vh;
       display: flex;
       align-items: center;
@@ -945,28 +959,27 @@ onMounted(() => {
           width: 4.5vw;
         }
         &:nth-child(3) {
-          width: 8.6vw;
+          width: 6.5vw;
         }
         &:nth-child(4) {
-          width: 5.6vw;
+          width: 6.8vw;
         }
         &:last-child {
           color: #ff6d6d;
           cursor: pointer;
+          width: auto;
+          min-width: 2vw;
+          text-align: center;
         }
       }
     }
 
     .list-container {
-      position: relative;
       width: 100%;
       max-height: 17vh;
-      // height: auto;
       display: flex;
       flex-direction: column;
-      overflow: scroll;
-      // border-bottom: #74e6b8 solid 0.1vw;
-      // border-top: #74e6b8 solid 0.1vw;
+      overflow: auto;
       border-radius: 0.3vw;
 
       &::-webkit-scrollbar {
@@ -984,75 +997,54 @@ onMounted(() => {
       }
 
       .list-item {
-        position: relative;
-        width: 97%;
-        max-width: 97%;
-        // height: 10vh;
         display: flex;
-        // justify-content: center;
         align-items: center;
+        width: 24vw;
+        padding: 0.4vw 0;
+        // padding-left: 0.5vw;
         margin-bottom: 1vh;
         background-color: #f7feffb0;
         border-radius: 0.4vw;
         box-shadow: #74e687b7 1px 1px 0.1vw;
-        // border: #74e6b8 solid 0.1vw;
-        padding: 0.4vw 0;
-        padding-left: 0.5vw;
         font-weight: 100;
+        font-size: 0.8rem;
 
-        span {
+        > span {
+          white-space: nowrap;
+          text-align: start;
+          height: 2vh;
+          line-height: 2vh;
+          padding-left: 0.3vw;
+
           &:first-child {
-            font-size: 0.8rem;
-            width: 1.5vw;
-            text-align: start;
+            width: 2.5vw;
           }
-        }
-      }
-      .item-name {
-        font-size: 0.8rem;
-        height: 100%;
-        width: 5vw;
-        text-align: start;
-        margin-left: 1vw;
-      }
-      .item-value {
-        font-size: 0.8rem;
-        text-align: start;
-        width: 6vw;
-        white-space: nowrap;
-        height: 100%;
-      }
-      .item-used-time {
-        position: absolute;
-        right: 3vw;
-        font-size: 0.7rem;
-        height: 2vh;
-        line-height: 2vh;
-        // background-color: #ffacac;
-      }
-      .delete-btn {
-        position: absolute;
-        right: 1vw;
-        font-size: 1rem;
-        height: 2vh;
-        line-height: 2vh;
-        color: #ff8a8a;
-        cursor: pointer;
-
-        &:active {
-          scale: 0.95;
-          transition: all 0.2s ease-in-out;
+          &:nth-child(2) {
+            width: 4.5vw;
+          }
+          &:nth-child(3) {
+            width: 6.5vw;
+          }
+          &:nth-child(4) {
+            width: 6.5vw;
+          }
+          &:last-child {
+            width: auto;
+            min-width: 2vw;
+            color: #ff8a8a;
+            cursor: pointer;
+            text-align: center;
+          }
         }
       }
 
       .empty {
-        position: relative;
         width: 100%;
         height: 17vh;
-        // background-color: #ffc9c9;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: #aaa;
       }
     }
   }
@@ -1095,7 +1087,6 @@ onMounted(() => {
     letter-spacing: 0.1rem;
     display: flex;
     align-items: center;
-    // justify-content: space-between;
 
     .use-lasttime-btn {
       font-weight: 100;
@@ -1111,7 +1102,6 @@ onMounted(() => {
 
       &:hover {
         background-color: #73eecb;
-        transition: all 0.2s ease-in-out;
         transform: translateY(-0.2vh);
       }
     }
@@ -1172,12 +1162,10 @@ onMounted(() => {
 
         &:hover {
           scale: 1.1;
-          transition: all 0.2s ease-in-out;
         }
 
         &:active {
           scale: 0.95;
-          transition: all 0.2s ease-in-out;
         }
       }
     }
@@ -1186,7 +1174,6 @@ onMounted(() => {
   .preset-section {
     display: flex;
     flex-direction: row;
-    // align-items: center;
     gap: 0.6vw;
 
     .section-title {
@@ -1199,8 +1186,6 @@ onMounted(() => {
     .preset-buttons {
       display: flex;
       flex-direction: row;
-      // align-items: center;
-      // justify-content: center;
       gap: 0.8vw;
 
       .preset-button {

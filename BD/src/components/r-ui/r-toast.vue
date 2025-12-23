@@ -160,8 +160,8 @@ onUnmounted(() => {
       display: flex;
       height: 7vh;
       justify-content: center;
-      gap: 18px;
-      background: rgba(255, 255, 255, 0.2);
+      gap: 1vw;
+      background: rgba(255, 255, 255, 0.315);
       backdrop-filter: blur(4px);
 
       button {
@@ -170,22 +170,14 @@ onUnmounted(() => {
         line-height: 4vh;
         position: relative;
         top: 1.5vh;
-        border: 2px solid rgba(255, 255, 255, 0.7);
-        border-radius: 14px;
+        border: none;
+        border-radius: 0.5vw;
         color: #1a5d57;
-        font-size: 1.05rem;
-        font-weight: 600;
+        font-size: 1.1rem;
         cursor: pointer;
         transition: all 0.25s ease;
-        // outline: none;
         box-shadow: 0 2px 6px rgba(103, 218, 193, 0.2);
         font-family: '钉钉进步体 Regular';
-        font-weight: 400;
-        src:
-          url('/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff2') format('woff2'),
-          url('/src/assets/FimWw6NxrqZv/DingTalk-JinBuTi.woff') format('woff');
-        font-variation-settings: normal;
-        font-display: swap;
 
         &:hover {
           // background: rgba(255, 255, 255, 0.5);
@@ -203,16 +195,15 @@ onUnmounted(() => {
         }
       }
 
-      .btn-confirm {
-        border-color: #ffffffb3;
+      .btn-cancel {
         color: #2a6b63;
         background-color: #caffd7;
       }
 
-      .btn-cancel {
-        border-color: #ffffffb3;
-        color: #2a6b63;
-        background-color: #b5ffc8;
+      .btn-confirm {
+        // border-color: #7bcc8c;
+        color: #eafffd;
+        background-color: #50ec9c;
       }
     }
   }
