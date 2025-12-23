@@ -39,20 +39,20 @@ const getThemeColor = () => {
   switch (props.tipsType) {
     case 'alert-w':
       return {
-        one: '#FFECB3',
-        two: '#FFD56Aa1',
+        one: '#fff',
+        two: '#fff',
         three: '#E6A800',
       }
     case 'alert-e':
       return {
-        one: '#FFCCCC',
-        two: '#FF9999',
+        one: '#fff',
+        two: '#fff',
         three: '#CC3333',
       }
     case 'alert-s':
       return {
-        one: '#D1FFF4',
-        two: '#A8FFD8',
+        one: '#fff',
+        two: '#fff',
         three: '#2A7F75',
       }
     default:
@@ -145,7 +145,7 @@ onUnmounted(() => {
           '--theme-color-three': getThemeColor().three,
           width: tipsType === 'confirm' ? '20vw' : 'auto',
           borderRadius: tipsType === 'confirm' ? '0.8vw' : '0.4vw',
-          top: tipsType === 'confirm' ? '-25vh' : '0',
+          top: tipsType === 'confirm' ? '-25vh' : '-2vh',
           padding: tipsType === 'confirm' ? '0' : '0 2vw',
         }"
       >
@@ -159,6 +159,7 @@ onUnmounted(() => {
           <h1
             :style="{
               fontSize: tipsType === 'confirm' ? '1.2rem' : '1rem',
+              fontWeight: tipsType === 'confirm' ? '700' : '100',
               color: getThemeColor().three,
             }"
           >
@@ -229,13 +230,14 @@ onUnmounted(() => {
 }
 
 .alert-tips {
-  border: var(--theme-color-three) 0.1vw solid !important;
+  // border: var(--theme-color-three) 0.1vw solid !important;
   background: linear-gradient(
     -15deg,
     var(--theme-color-one) 0%,
     var(--theme-color-two) 100%
   ) !important;
-  box-shadow: var(--theme-color-one) 0 0 0 0.1vw !important;
+  // background-color: #fff !important;
+  box-shadow: var(--theme-color-three) 0 0 0.15vw !important;
 }
 
 .confirm-tips {
