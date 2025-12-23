@@ -197,7 +197,11 @@ onUnmounted(() => {
       class="header-container"
       @mouseover="isShowAll = true"
       @mouseleave="mouseLeaveHandler()"
-      :style="{ width: isShowAll ? '100vw' : '12vw', borderRadius: isShowAll ? '0px' : '10vw' }"
+      :style="{
+        width: isShowAll ? '100vw' : '12vw',
+        borderRadius: isShowAll ? '0px' : '10vw',
+        backgroundColor: isShowAll ? '#f6fdfaee' : '#ffffff55',
+      }"
     >
       <div class="title">
         <span v-show="!isShowAll">&lsaquo;&nbsp;..</span>
@@ -314,12 +318,12 @@ onUnmounted(() => {
 
         span {
           padding: 0.4vh 0.8vw;
-          border: 0.1vw solid #ceffd9;
+          // border: 0.1vw solid #ceffd9;
           border-radius: 0.5vw;
           cursor: pointer;
           color: #79ecb3;
           font-weight: 100;
-          font-size: 0.95rem;
+          font-size: 1.15rem;
           white-space: nowrap;
           transition: all 0.25s ease-in-out;
           // background-color: #ffffff8f;
@@ -334,11 +338,11 @@ onUnmounted(() => {
           &.active {
             // border-color: #ffffff;
             border: none;
-            color: #008463;
+            color: #2a7f75;
             // font-weight: 600;
-            font-size: 1.2rem;
+            // font-size: 1.2rem;
             transform: translateY(-1px) scale(1.1);
-            text-shadow: #61c00f81 0 0.1vw 0.2vw;
+            text-shadow: #439b918c 0 0.1vw 0.2vw;
             cursor: default;
           }
 
