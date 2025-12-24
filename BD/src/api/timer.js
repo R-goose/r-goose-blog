@@ -2,15 +2,15 @@ import request from '@/utils/request'
 export const timergApi = {
   // 获取使用记录列表
   getList: () =>
-    request.get('/timer'),
+    request.get('/records'),
 
   // 新增计时器使用记录
   postUseRecord: (data) =>
-    request.post('/timer', data),
+    request.post('/records', data),
 
   // 删除计时器使用记录
   deleteUsedRecord: (id) =>
-    request.delete(`/timer/${id}`),
+    request.delete(`/records/${id}`),
 
   // 获取预设按钮时间列表
   getPreSetTimeList: () =>
