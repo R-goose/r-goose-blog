@@ -51,6 +51,8 @@ export function rTips({
       if (!visible) {
         cleanup()
         if (isConfirm) {
+          console.log('?666');
+
           resolveFn('close')
         }
       }

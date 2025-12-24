@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed, nextTick } from 'vue'
 import { timeFormat } from '@/utils/functions'
 import rToast from '@/components/r-ui/r-toast.vue'
 import { rTips } from '@/utils/rTips'
+import { timergApi } from '@/api/timer'
 
 const displayTime = ref({
   hours: 0,
@@ -139,6 +140,11 @@ const pauseTimer = (index) => {
 }
 
 const stopTimer = (index) => {
+  let params = {
+    name: '',
+    value: '',
+    usedTime: '',
+  }
   if (index == 0) {
     if (!isRunning.value) {
       rTips({
@@ -154,6 +160,19 @@ const stopTimer = (index) => {
     isPaused.value = false
     isRunning.value = false
     elapsedBeforePause.value = 0
+    params = {
+      name: '打点计时器',
+      value:
+        '累计' +
+        displayTime.value.hours +
+        ':' +
+        displayTime.value.minutes +
+        ':' +
+        displayTime.value.seconds +
+        ':' +
+        displayTime.value.milliseconds,
+      usedTime: timeFormat(new Date()) + ' ' + new Date().toLocaleTimeString(),
+    }
     useRecord.value.push({
       name: '打点计时器',
       value:
@@ -186,7 +205,21 @@ const stopTimer = (index) => {
     }
     isCountdownPaused.value = false
     isCountdownRunning.value = false
+    isUseCustomTime.value = false
     formatCountdownTime(countdownTimeSpent.value)
+
+    params = {
+      name: '倒计时器',
+      value:
+        '耗时' +
+        selectCountdownTimeShow.value.hours +
+        ':' +
+        selectCountdownTimeShow.value.minutes +
+        ':' +
+        selectCountdownTimeShow.value.seconds,
+      usedTime: timeFormat(new Date()) + ' ' + new Date().toLocaleTimeString(),
+    }
+
     useRecord.value.push({
       name: '倒计时器',
       value:
@@ -206,6 +239,8 @@ const stopTimer = (index) => {
     })
     formatCountdownTime(0)
   }
+  timergApi.postUseRecord(params)
+  init()
 }
 
 const timeType = ref([
@@ -215,8 +250,8 @@ const timeType = ref([
 
 //倒计时器
 const presetTime = ref([
-  { name: '10分', value: 600000 },
-  { name: '1时', value: 3600000 },
+  { id: '1234', name: '10分', value: 600000 },
+  { id: '5678', name: '1时', value: 3600000 },
 ])
 
 //自定义
@@ -233,7 +268,7 @@ const presetTimeHour = ref(0)
 const isUseCustomTime = ref(false)
 const selectPresetTimeItem = ref(0)
 const toastTitle = '自定义倒计时'
-const lastSelectCountdownTime = ref({})
+const lastSelectCountdownTime = ref([])
 
 const selectPresetTime = (value) => {
   if (value == 0) {
@@ -359,6 +394,12 @@ const confirm = async () => {
   lastSelectCountdownTime.value.minutes = customMinutes.value
   lastSelectCountdownTime.value.hours = customHours.value
 
+  let lastSelectCountdownTimeParams = {
+    seconds: lastSelectCountdownTime.value.seconds,
+    minutes: lastSelectCountdownTime.value.minutes,
+    hours: lastSelectCountdownTime.value.hours,
+  }
+
   if (
     lastSelectCountdownTime.value.seconds == 0 &&
     lastSelectCountdownTime.value.minutes == 0 &&
@@ -367,6 +408,7 @@ const confirm = async () => {
     isUseCustomTime.value = false
   } else {
     isUseCustomTime.value = true
+    await timergApi.updateLastUsedTime('1357', lastSelectCountdownTimeParams)
   }
 
   await nextTick(() => {
@@ -376,8 +418,11 @@ const confirm = async () => {
 
   customHours.value = 0
   customMinutes.value = 0
-
-  presetTime.value.forEach((item) => {
+  let params = {
+    name: '',
+    value: '',
+  }
+  presetTime.value.forEach(async (item) => {
     if (item.value == selectPresetTimeItem.value) {
       let newName = ''
       if (presetTimeHour.value != 0) {
@@ -395,6 +440,17 @@ const confirm = async () => {
         presetTimeMinute.value * 60000 +
         presetTimeHour.value * 3600000
       // formatCountdownTime(item.value)
+      params = {
+        name: item.name,
+        value: item.value,
+      }
+      await timergApi.findPreSetTime(item.id).then(async () => {
+        await timergApi.updatePreSetTime(item.id, params)
+      })
+      //   .catch(async () => {
+      //     await timergApi.addPreSetTime(params)
+      //   })
+      init()
       if (selectPresetTimeItem.value == 0) {
         customTimeFlag.value = false
       }
@@ -416,33 +472,11 @@ const timeTypeChange = () => {
 }
 
 const useRecord = ref([
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: 0 },
-  { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
+  // { usedTime: '2022-01-01 12:00:00', name: '打点计时器', value: '00:00:00:000' },
+  // { usedTime: '2022-01-01 12:00:00', name: '倒计时器', value: 0 },
 ])
 
-const deleteRecord = async (index) => {
+const deleteRecord = async (id) => {
   if (useRecord.value.length == 0) {
     rTips({
       type: 'alert-w',
@@ -450,7 +484,7 @@ const deleteRecord = async (index) => {
     })
     return
   }
-  if (index == -1) {
+  if (id == '-1') {
     const result = await rTips({
       type: 'confirm',
       title: '确认删除全部记录？',
@@ -458,8 +492,13 @@ const deleteRecord = async (index) => {
       confirmBtnText: '删了',
       cancelBtnText: '手滑,不删了',
     })
+
     if (result == 'confirm') {
-      useRecord.value = []
+      useRecord.value.forEach(async (item) => {
+        await timergApi.deleteUsedRecord(item.id)
+        console.log('id:', item.id)
+      })
+      useRecord.value = await timergApi.getList()
       rTips({
         type: 'alert-s',
         title: '已删除全部记录',
@@ -476,11 +515,14 @@ const deleteRecord = async (index) => {
       confirmBtnText: '删了',
       cancelBtnText: '手滑,不删了',
     })
+
     if (result == 'confirm') {
-      useRecord.value.splice(index, 1)
+      await timergApi.deleteUsedRecord(id).then(async () => {
+        useRecord.value = await timergApi.getList()
+      })
       rTips({
         type: 'alert-s',
-        title: '已删除全部记录',
+        title: '已删除该记录',
       })
       return
     } else {
@@ -536,6 +578,13 @@ const sortRecord = (type) => {
     }
   }
 }
+//初始化
+const init = async () => {
+  useRecord.value = await timergApi.getList()
+  presetTime.value = await timergApi.getPreSetTimeList()
+  lastSelectCountdownTime.value = await timergApi.getLastUsedTime()
+  lastSelectCountdownTime.value = lastSelectCountdownTime.value[0]
+}
 
 watch(presetTimeSecond, (newVal) => {
   if (newVal < 0) {
@@ -562,12 +611,13 @@ watch(presetTimeHour, (newVal) => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   nowUseTypeIndex.value = 0
   updateDisplay(0)
   formatCountdownTime(0)
   reverseFlag.value.functionSort = false
   reverseFlag.value.timeSort = false
+  init()
 })
 </script>
 
@@ -642,7 +692,7 @@ onMounted(() => {
         <span>功能</span>
         <span>值</span>
         <span>使用时间</span>
-        <span @click="deleteRecord(-1)">删除</span>
+        <span @click="deleteRecord('-1')">删除</span>
       </div>
       <div class="list-container">
         <div class="list-item" v-for="(item, index) in useRecord" :key="index">
@@ -650,7 +700,7 @@ onMounted(() => {
           <span class="item-name">{{ item.name }}</span>
           <span class="item-value">{{ item.value }}</span>
           <span class="item-used-time">{{ item.usedTime }}</span>
-          <span class="delete-btn" @click="deleteRecord(index)">x</span>
+          <span class="delete-btn" @click="deleteRecord(item.id)">x</span>
         </div>
         <div v-if="useRecord.length == 0" class="empty">暂无数据</div>
       </div>
@@ -712,8 +762,8 @@ onMounted(() => {
           </div>
           <div class="lastTime">
             上次自定义的倒计时:
-            {{ lastSelectCountdownTime.hours || 0 }}时 {{ lastSelectCountdownTime.minutes || 0 }}分
-            {{ lastSelectCountdownTime.seconds || 0 }}秒
+            {{ lastSelectCountdownTime.hours }}时 {{ lastSelectCountdownTime.minutes }}分
+            {{ lastSelectCountdownTime.seconds }}秒
             <span class="use-lasttime-btn" @click="useLastTime()">使用</span>
           </div>
           <div class="preset-section">
@@ -1055,7 +1105,6 @@ onMounted(() => {
   scale: 1.05 !important;
   font-size: 0.9rem !important;
   color: #ffffff !important;
-  cursor: default !important;
   border: #ffffff solid 0.1vh !important;
 
   &:hover {
