@@ -6,7 +6,7 @@ onMounted(() => {})
 
 <template>
   <div class="statisticalData">
-    <div class="left"></div>
+    <div class="left">6</div>
     <div class="right"></div>
   </div>
 </template>
