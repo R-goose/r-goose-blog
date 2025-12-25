@@ -12,6 +12,7 @@
     "mock": "json-server --watch mock/db.json --port 8080 --host localhost"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.89.0",
     "axios": "^1.13.2",
     "dayjs": "^1.11.13",
     "echarts": "^6.0.0",
