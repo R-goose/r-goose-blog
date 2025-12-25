@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "d": "concurrently \"vite\" \"pnpm run mock\"",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
